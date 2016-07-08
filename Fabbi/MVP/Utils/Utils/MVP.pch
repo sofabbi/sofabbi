@@ -1,0 +1,99 @@
+//
+//  MVP.pch
+//  MVP
+//
+//  Created by 刘志刚 on 16/4/14.
+//  Copyright © 2016年 刘志刚. All rights reserved.
+//
+
+#ifndef MVP_pch
+#define MVP_pch
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+
+#define kScreenWidth  [[UIScreen mainScreen]bounds].size.width
+#define kScreenHeight [[UIScreen mainScreen]bounds].size.height
+
+#define KViewWidth self.view.frame.size.width
+#define KViewHeight self.view.frame.size.height
+// 只定义宽，高不用，如果同时用的话，等宽的图片就成功不了
+#define kScreenWidthP [[UIScreen mainScreen]bounds].size.width/375.0f
+#define kScale ([[UIScreen mainScreen]bounds].size.width/375)
+#define RGBA(R,G,B,A)  [UIColor colorWithRed:R/255.0f green:G/255.0f blue:B/255.0f alpha:A]
+#define kColorM ([UIColor colorWithRed:1.f green:102.f/255.f blue:0.f alpha:1.f])
+#define kColorMHighlight ([UIColor colorWithRed:1.f green:155.f/255.f blue:82.f/255.f alpha:1.f])
+#define kColorCellSelected ([UIColor colorWithRed:238.f/255.f green:238.f/255.f blue:238.f/255.f alpha:1.f])
+
+#define UserDefaultSetObjectForKey(__VALUE__,__KEY__) \
+{\
+[[NSUserDefaults standardUserDefaults] setObject:__VALUE__ forKey:__KEY__];\
+[[NSUserDefaults standardUserDefaults] synchronize];\
+}
+
+/**
+ *  get the saved objects       获得存储的对象
+ */
+#define UserDefaultObjectForKey(__KEY__)  [[NSUserDefaults standardUserDefaults] objectForKey:__KEY__]
+
+/**
+ *  delete objects      删除对象
+ */
+#define UserDefaultRemoveObjectForKey(__KEY__) \
+{\
+[[NSUserDefaults standardUserDefaults] removeObjectForKey:__KEY__];\
+[[NSUserDefaults standardUserDefaults] synchronize];\
+}
+
+
+#define FABBI_AUTHORIZATION_UID      @"FABBI_AUTHORIZATION_UID"
+#define FABBI_AUTHORIZATION_USERINFO @"FABBI_AUTHORIZATION_USERINFO"
+#define FABBI_AUTHORIZATION_PHONE @"FABBI_AUTHORIZATION_PHONE"
+
+#define SECRET  @"e1191c18ebe1d99b515fa0f0555af6f8"
+#define APPID @"10000002"
+// 网络的key
+#define LFIsNetWork @"isNetWork"
+
+#define API_development @"http://114.55.43.106/"
+#define API_production @""
+#define API_server @"http://192.168.0.192/"
+
+#define API_BI @"http://bi.sofabbi.com/applog?"
+
+
+#define WX_BASE_URL  @"https://api.weixin.qq.com/sns"
+#define WX_UNION_ID @"unionid"
+#define kWeiXinAppId @"wxe61a3e72eb7dccf4"
+#define kWeiXinAppSecret @"c9991f2a73834a39e626f50a3ab49f05"
+#define kWeiXinAccessToken @"access_token"
+#define kWeiXinOpenId @"openid"
+#define kWeiXinRefreshToken @"refresh_token"
+
+#define KWeiBoAppkey @"4039877335"
+#define KWeiBoAppSecret @"29003c714c4c6c724327591f4977e25f"
+#define KWeiBoOAuthUrl   @"https://api.weibo.com/oauth2/default.html"
+#define KQQAPPID16  @"41E40778"
+#define KQQAPPID @"1105463160"
+#define KQQAPPKEY @"CVflTL84YT42em7W"
+#define KYMAppkey @"57747827e0f55aeaf8001080"
+//获取ticket
+#define GETTICKET @"http://api.eatfit.com.cn/common/token?"
+#define GETIMAGE @"http://api.eatfit.com.cn/v2/item/week/get?"
+typedef enum ScrollDirection {
+    ScrollDirectionNone,
+    ScrollDirectionRight,
+    ScrollDirectionLeft,
+    ScrollDirectionUp,
+    ScrollDirectionDown,
+    ScrollDirectionCrazy,
+} ScrollDirection;
+#import "M80AttributedLabel.h"
+
+#import "FXBlurView.h"// 毛玻璃
+
+#import "DXPopover.h"
+#import "UMMobClick/MobClick.h"
+
+#import "NSString+IPAddress.h"
+#import "NSArray+judge.h"
+#endif /* MVP_pch */
+

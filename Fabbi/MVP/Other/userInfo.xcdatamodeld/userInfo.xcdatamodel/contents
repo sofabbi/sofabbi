@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15E65" minimumToolsVersion="Xcode 7.0">
+    <entity name="Entity" representedClassName="Entity" syncable="YES">
+        <attribute name="bindWebchart" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="loginName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userGagDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userGagReason" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userPassword" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userRealName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userRegTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userSalt" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userStatus" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userTel" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Entity" positionX="-54" positionY="-9" width="128" height="240"/>
+    </elements>
+</model>

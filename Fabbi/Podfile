@@ -1,0 +1,15 @@
+platform :ios,’9.0’
+pod 'AFNetworking','~>2.0'
+ pod 'SDWebImage'
+pod 'MJRefresh'
+  pod 'FMDBDataTable', '~> 0.7.4’
+ pod 'SDWebImage'
+pod 'TYAttributedLabel'
+pod 'TTTAttributedLabel'
+pod 'WeiboSDK'
+pod 'MBProgressHUD'
+pod 'MJExtension'
+pod 'GTSDK'
+pod 'DTCoreText'
+pod 'UMengAnalytics-NO-IDFA'
+
