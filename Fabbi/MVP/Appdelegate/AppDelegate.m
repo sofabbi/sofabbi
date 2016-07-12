@@ -17,17 +17,21 @@
 #import <AFNetworking/AFNetworking.h>
 #import "LoginViewController.h"
 #import "WXApiManager.h"
+#import <Bugly/Bugly.h>
+
 @interface AppDelegate ()<WeiboSDKDelegate>
-@property (nonatomic,strong)NSString *code;
+@property (nonatomic, strong) NSString *code;
 @end
 
 @implementation AppDelegate
 @synthesize WBtoken;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [Bugly startWithAppId:KBUGAPPID];
     [WXApi registerApp:kWeiXinAppId];
     [WeiboSDK enableDebugMode:YES];
     [WeiboSDK registerApp:KWeiBoAppkey];
-  id message = [[TencentOAuth alloc] initWithAppId:KQQAPPID andDelegate:nil];
+    id message = [[TencentOAuth alloc] initWithAppId:KQQAPPID andDelegate:nil];
     NSLog(@"%@",message);
     [MobClick setLogEnabled:YES];
     UMConfigInstance.appKey = KYMAppkey;
@@ -38,26 +42,26 @@
     NSLog(@"moblick");
     NSString *uid = [NSString stringWithFormat:@"%@",UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID)];
     if (uid) {
-        [MobClick profileSignInWithPUID:uid]; 
+        [MobClick profileSignInWithPUID:uid];
     }
-   
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self firstApp];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(createFirstPageVctrl) name:@"createFirstPageVctrl" object:nil];
-     [self.window makeKeyAndVisible];
+    [self.window makeKeyAndVisible];
     return YES;
 }
 -(void)firstApp{
-   
+    
     NSString *frist = UserDefaultObjectForKey(@"first_start");
     NSLog(@"frist======%@",frist);
     if ([frist isEqualToString:@"fabbi_first_start"]) {
         [self createFirstPageVctrl];
     }else{
         UserDefaultSetObjectForKey(@"fabbi_first_start", @"first_start");
-          self.window.rootViewController = [ViewController new];
-         [self.window setBackgroundColor:[UIColor whiteColor]];
-
+        self.window.rootViewController = [ViewController new];
+        [self.window setBackgroundColor:[UIColor whiteColor]];
+        
     }
 }
 
@@ -117,7 +121,7 @@
 //     lang    微信客户端当前语言
 //     country 微信用户当前国家信息
 //     */
-//    
+//
 //    // 向微信请求授权后,得到响应结果
 //    if ([resp isKindOfClass:[SendAuthResp class]]) {
 //        SendAuthResp *temp = (SendAuthResp *)resp;
@@ -138,7 +142,7 @@
 //                [[NSUserDefaults standardUserDefaults] synchronize]; // 命令直接同步到文件里，来避免数据的丢失
 //            }
 //            [self wechatLoginByRequestForUserInfo:^(NSDictionary *task, NSError *error) {
-//                
+//
 //            }];
 //        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 //            NSLog(@"获取access_token时出错 = %@", error);
@@ -163,25 +167,25 @@
 //}
 ////第三步：使用AccessToken获取用户信息
 //-(void)getUserInfo{
-//     
+//
 //    // https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID
 //    NSUserDefaults *usr = [NSUserDefaults standardUserDefaults];
 //    NSString *access_token = [usr objectForKey:@"access_token"];
 //    //通过usr的NSUserDefaults
 //    NSString *openId = [usr objectForKey:@"openId"];
-//    
+//
 //    NSString *url =[NSString stringWithFormat:@"https://api.weixin.qq.com/sns/userinfo?access_token=%@&openid=%@",access_token,openId];
-//    
+//
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 //        NSURL *zoneUrl = [NSURL URLWithString:url];
-//        
+//
 //        NSString *zoneStr = [NSString stringWithContentsOfURL:zoneUrl encoding:NSUTF8StringEncoding error:nil];
-//        
+//
 //        NSData *data = [zoneStr dataUsingEncoding:NSUTF8StringEncoding];
 //        dispatch_async(dispatch_get_main_queue(), ^{
 //            if (data) {
 //                NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-//                
+//
 //                /*
 //                 city = Minhang;
 //                 country = CN;
@@ -194,26 +198,26 @@
 //                 province = Shanghai;
 //                 sex = 1;
 //                 }                 */
-//                
+//
 //                NSString *name = [dic objectForKey:@"nickname"];
 //                NSLog(@"nickname=============================%@",name) ;
 //                NSLog(@"headimgurl===========================%@",[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[dic objectForKey:@"headimgurl"]]]]);
 //                NSLog(@"openId===============%@",openId);
-//                
+//
 //                // 通过usr的NSUserDefaults单例，把照片的字符串传递出去
 //                NSString *imageStr = [dic objectForKey:@"headimgurl"];
-//                
+//
 //                NSUserDefaults *usr = [NSUserDefaults standardUserDefaults];
 //                [usr setObject:imageStr forKey:@"zhigangImage"];
-//                
+//
 //                [usr setObject: name forKey:@"wechatName"];
 //                [usr synchronize];
 //                // 修改登录态
 //                [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"state"];
-//                
+//
 //            }
 //        });
-//        
+//
 //    });
 //}
 
@@ -230,10 +234,12 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

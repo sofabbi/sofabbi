@@ -46,12 +46,12 @@
     [self.contentView addGestureRecognizer:longPressGesture];
     UISwipeGestureRecognizer *swipUPGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeGesture:)];
     swipUPGesture.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.contentView addGestureRecognizer:swipUPGesture];
+//    [self.contentView addGestureRecognizer:swipUPGesture];
     
     
     UISwipeGestureRecognizer *swipDownGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeGesture:)];
     swipDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.contentView addGestureRecognizer:swipDownGesture];
+//    [self.contentView addGestureRecognizer:swipDownGesture];
 }
 //轻扫手势触发方法
 -(void)swipeGesture:(id)sender

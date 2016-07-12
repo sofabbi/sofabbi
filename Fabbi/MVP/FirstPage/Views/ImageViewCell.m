@@ -27,12 +27,12 @@
 #define BButton_Width kScreenWidth - 20*kScreenWidthP// 宽
 
 @interface ImageViewCell ()<TYAttributedLabelDelegate>
-@property (nonatomic,strong)NSArray *itemFileLists;
+@property (nonatomic, strong) NSArray *itemFileLists;
 @end
 @implementation ImageViewCell
 +(CGFloat)getAddTextAttributedLabel:(NSDictionary *)dic{
     CGFloat height;
-   NSString *type = @"1";
+    NSString *type = @"1";
     NSArray *itemFileList = [dic objectForKey:@"itemFileList"];
     if (itemFileList.count > 0) {
         if ([type isEqualToString:@"1"]) {
@@ -58,7 +58,7 @@
 }
 - (void)addTextAttributedLabel:(NSDictionary *)dic{
     CGFloat height;
-   NSString *type = @"1";
+    NSString *type = @"1";
     _itemFileLists = [dic objectForKey:@"itemFileList"];
     if (_itemFileLists.count > 0) {
         if ([type isEqualToString:@"1"]) {
@@ -72,16 +72,16 @@
                 UITapGestureRecognizer *tapImage = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapImageAction:)];
                 [imageView addGestureRecognizer:tapImage];
                 if (![NSString isBlankString:imageUrl]) {
-                  [imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"placeholderImage"]];
+                    [imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"placeholderImage"]];
                 }else{
                     [imageView setImage:[UIImage imageNamed:@"placeholderImage"]];
                 }
             }
-           
+            
         }else{
             for (int i = 0 ; i < _itemFileLists.count; i++) {
-//                NSDictionary *imageDic = [itemFileList objectAtIndex:i];
-//                NSString *imageUrl = [imageDic objectForKey:@"fileUrl"];
+                //                NSDictionary *imageDic = [itemFileList objectAtIndex:i];
+                //                NSString *imageUrl = [imageDic objectForKey:@"fileUrl"];
                 NSInteger index = i % 2;
                 NSInteger page = i / 2;
                 UIButton *aBt = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -95,17 +95,15 @@
             NSInteger page = 5 / 2;
             height = page  * (Button_Height + Height_Space)+Start_Y + Button_Height;
         }
-  
+        
     }
     
 }
 // 点击代理
 - (void)attributedLabel:(TYAttributedLabel *)attributedLabel textStorageClicked:(id<TYTextStorageProtocol>)textStorage atPoint:(CGPoint)point{
     if ([textStorage isKindOfClass:[TYImageStorage class]]) {
-//        TYImageStorage *imageStorage = (TYImageStorage *)textStorage;
-
+        //        TYImageStorage *imageStorage = (TYImageStorage *)textStorage;
     }else if ([textStorage isKindOfClass:[TYLinkTextStorage class]]) {
-        
         id linkStr = ((TYLinkTextStorage*)textStorage).linkData;
         if ([linkStr isKindOfClass:[NSString class]]) {
             
@@ -113,19 +111,11 @@
     }
 }
 - (void)tapImageAction:(UITapGestureRecognizer*)sender {
-    
     UIImageView *imageView =(UIImageView *)sender.view;
-//    [self.delegate selectImageView:imageView];
+    //    [self.delegate selectImageView:imageView];
     [self.delegate selectImageView:imageView itemFileLists:_itemFileLists];
-
+    
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end

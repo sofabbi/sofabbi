@@ -34,7 +34,7 @@
         for (NSInteger i = 0; i < 5; i++) {
             TYImageStorage*imageUrlStorage = [[TYImageStorage alloc]init];
             imageUrlStorage.size = CGSizeMake(kScreenWidth, 343*CGRectGetWidth(label.frame)/600);
-
+            
             imageUrlStorage.imageAlignment = TYImageAlignmentFill;
             imageUrlStorage.margin = UIEdgeInsetsMake(10, 0, 0, 0);
             [tmpArray addObject:imageUrlStorage];
@@ -50,7 +50,7 @@
         height = page  * (Button_Height + Height_Space)+Start_Y + Button_Height;
     }
     
-
+    
     
     height = height +19*kScreenWidthP+87*kScreenWidthP;
     TYAttributedLabel *textLable = [[TYAttributedLabel alloc]initWithFrame:CGRectMake(20*kScreenWidthP, height, kScreenWidth-40*kScreenWidthP, 0)];
@@ -74,7 +74,7 @@
 }
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
-//        [self addTextAttributedLabel:@"2"];
+        //        [self addTextAttributedLabel:@"2"];
     }
     return self;
 }
@@ -94,7 +94,7 @@
             TYImageStorage*imageUrlStorage = [[TYImageStorage alloc]init];
             imageUrlStorage.tag = i+101;
             imageUrlStorage.size = CGSizeMake(kScreenWidth, 343*CGRectGetWidth(labelImageView.frame)/600);
-           
+            
             imageUrlStorage.imageAlignment = TYImageAlignmentFill;
             imageUrlStorage.margin = UIEdgeInsetsMake(10, 5, 0, 5);
             [tmpArray addObject:imageUrlStorage];
@@ -138,7 +138,7 @@
     title.textColor = [UIColor blackColor];
     title.font = [UIFont systemFontOfSize:16];
     [titleView addSubview:title];
-
+    
     UILabel *subtitleL = [[UILabel alloc]initWithFrame:CGRectMake(0, titleVY+45*kScreenWidthP, kScreenWidth, 25*kScreenWidthP)];
     subtitleL.text = @"Olympia Activewear";
     subtitleL.font = [UIFont systemFontOfSize:18];
@@ -164,7 +164,7 @@
     [attString createTextContainerWithTextWidth:kScreenWidth-40*kScreenWidthP];
     textLable.textContainer = attString;
     [textLable sizeToFit];
-
+    
 }
 // 点击代理
 - (void)attributedLabel:(TYAttributedLabel *)attributedLabel textStorageClicked:(id<TYTextStorageProtocol>)textStorage atPoint:(CGPoint)point{
@@ -186,11 +186,11 @@
     [alertView show];
 }
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code
+ }
+ */
 
 @end

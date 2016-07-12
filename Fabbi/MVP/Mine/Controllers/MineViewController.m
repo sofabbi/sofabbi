@@ -32,31 +32,32 @@
 #import "GoodsViewController.h"
 #import <MJRefresh/MJRefresh.h>
 #import "NSDate+Time.h"
+
 typedef NS_ENUM(NSUInteger, MineButtonSelected) {
     MineButtonSelectedWant,
     MineButtonSelectedCollection,
     MineButtonSelectedComment
 };
 @interface MineViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate,ExitRegLoginDelegate,ForgetPasswordDelegate,WeChatLoginDelegate,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,mineWantCellDelegate,mineCollectionCellDelegate,mineCommentCellDelegate>
-@property (nonatomic,strong) UIButton *nickNameBtn;
-@property (nonatomic,strong) UILabel *nickLabel;
-@property (nonatomic,strong) UIImageView *myPhoto;
-@property (nonatomic,strong) UITextField *nickTextField;
-@property (nonatomic,strong) RegLoginScrollow *regLogScrollow;
-@property (nonatomic,strong) UIScrollView *selfScrollView;
-@property (nonatomic,strong) UITableView *mineTbView;
-@property (nonatomic,strong) UIView *mineView;
-@property (nonnull,strong)  UILabel *labelA;
-@property (nonnull,strong)  UILabel *lineLabel;
+@property (nonatomic, strong) UIButton *nickNameBtn;
+@property (nonatomic, strong) UILabel *nickLabel;
+@property (nonatomic, strong) UIImageView *myPhoto;
+@property (nonatomic, strong) UITextField *nickTextField;
+@property (nonatomic, strong) RegLoginScrollow *regLogScrollow;
+@property (nonatomic, strong) UIScrollView *selfScrollView;
+@property (nonatomic, strong) UITableView *mineTbView;
+@property (nonatomic, strong) UIView *mineView;
+@property (nonatomic, strong) UILabel *labelA;
+@property (nonatomic, strong) UILabel *lineLabel;
 // 创建下面的我的收藏，我的评论，我想要的
-@property (nonatomic,strong) MineButton *myCollectionBtn;
-@property (nonatomic,strong) MineButton *myCommentBtn;
-@property (nonatomic,strong) MineButton *myWantBtn;
+@property (nonatomic, strong) MineButton *myCollectionBtn;
+@property (nonatomic, strong) MineButton *myCommentBtn;
+@property (nonatomic, strong) MineButton *myWantBtn;
 // 下面是标题评论，想要，收藏的array
-@property (nonatomic,strong) NSArray *titleArray;
-@property (nonatomic,strong) NSMutableArray *vcArray;
-@property (nonatomic,strong) UIPageViewController *pageViewController;
-@property (nonatomic, assign)   MineButtonSelected mineButtonSelected;
+@property (nonatomic, strong) NSArray *titleArray;
+@property (nonatomic, strong) NSMutableArray *vcArray;
+@property (nonatomic, strong) UIPageViewController *pageViewController;
+@property (nonatomic, assign) MineButtonSelected mineButtonSelected;
 @property (nonatomic, strong) UIView *noContentView;
 @property (nonatomic, strong) UILabel *noContentL;
 @property (nonatomic, strong) UIButton *nocontentB;
@@ -89,20 +90,18 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
     [self requestFirst];
     // 当点击微信登陆，微信登陆成功发送post，此为监听微信的post（通知中心，微信登陆view上发送的，这里为接收）
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(wechatLogin) name:@"wechatLogin" object:nil];
-
 }
 
 - (void)mineBackBtn:(id)sender{
- 
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 #pragma 进入设置
 - (void)setUpBtn:(id)sender{
     SetUpViewController *setupVctrl = [[SetUpViewController alloc]init];
-//    CATransition* transition = [CATransition animation];
-//    transition.type = kCATransitionPush;//可更改为其他方式
-//    transition.subtype = kCATransitionFromRight;//可更改为其他方式
-//    [self.navigationController.view.layer addAnimation:transition forKey:kCATransition];
+    //    CATransition* transition = [CATransition animation];
+    //    transition.type = kCATransitionPush;//可更改为其他方式
+    //    transition.subtype = kCATransitionFromRight;//可更改为其他方式
+    //    [self.navigationController.view.layer addAnimation:transition forKey:kCATransition];
     [self.navigationController pushViewController :setupVctrl animated:YES];
 }
 
@@ -111,10 +110,10 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
  */
 #pragma 头像,用户名
 - (void)createView{
- 
+    
     // 个人私照
     self.myPhoto = [MyUtils createImageViewFrame:CGRectMake(145*kScreenWidthP, 64*kScreenWidthP, 85*kScreenWidthP, 85*kScreenWidthP) imageName:@"placeholderImage" cornerRadius:85/2*kScreenWidthP clipsToBounds:YES userInteractionEnabled:YES];
-   
+    
     [self.mineView addSubview:self.myPhoto];
     // 昵称
     self.nickTextField = [MyUtils createTextFieldFrame:CGRectMake(kScreenWidth/2-60*kScreenWidthP, CGRectGetMaxY(self.myPhoto.frame)+14*kScreenWidthP, 120*kScreenWidthP, 22*kScreenWidthP) borderStyle:UITextBorderStyleNone font:16*kScreenWidthP textColor:[UIColor blackColor] backgroundColor:[UIColor whiteColor]];
@@ -153,19 +152,19 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
     // 在没有请求出数据的时候，显示上面的，否则，显示下面的
     
     if ([UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageStr]]]) {
-         self.myPhoto.image =[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageStr]]];
-         self.nickTextField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"wechatName"];
+        self.myPhoto.image =[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageStr]]];
+        self.nickTextField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"wechatName"];
         
     }else{
         NSURL *url = [NSURL URLWithString:_userInfoModel.userLogo];
         [self.myPhoto sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"placeholderImage"]];
         self.nickTextField.text = _userInfoModel.userTel;
     }
-  
+    
     // 加个点击事件
     UITapGestureRecognizer *myPhotoTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showActionSheetForChangingAvatar)];
     [self.myPhoto addGestureRecognizer:myPhotoTap];
-
+    
     // 修改昵称button
     self.nickNameBtn = [MyUtils createButtonFrame:CGRectMake(kScreenWidth/2-75*kScreenWidthP+150*kScreenWidthP, 215*kScreenWidthP, 20*kScreenWidthP, 20*kScreenWidthP) title:nil selectTitle:nil titleColor:nil bgImageName:@"Signature" selectImageName:@"Signature" backgroundColor:[UIColor whiteColor] layerCornerRadius:0.f target:self action:@selector(nickNameBtn:)];
     [self.mineView addSubview:self.nickNameBtn];
@@ -184,7 +183,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
                           @"userId":uid
                           };
     [UserStore POSTWithParams:dic URL:@"api/queryUserDetail.html" success:^(NSURLSessionDataTask *task, id responseObject) {
-         _userInfoModel = [UserInfoModel mj_objectWithKeyValues:responseObject];
+        _userInfoModel = [UserInfoModel mj_objectWithKeyValues:responseObject];
         [UserInfoModel savePerson:_userInfoModel];
         _userLogo = _userInfoModel.userLogo;
         NSURL *url = [NSURL URLWithString:_userLogo];
@@ -193,11 +192,11 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [_mineTbView reloadData];
         });
-        NSLog(@"%@",responseObject);
+        
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         
     }];
-//    http://114.55.43.106/api/queryUserHobby.html
+    //    http://114.55.43.106/api/queryUserHobby.html
     self.titleArray = @[@"收藏的专题",@"我的评论",@"想要的装备"];
     self.vcArray = [NSMutableArray array];
 }
@@ -310,6 +309,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
 }
 
 
+
 /**
  从相册获取照片
  */
@@ -325,17 +325,17 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
         ctrl.allowsEditing = YES;
         [self presentViewController:ctrl animated:YES completion:nil];
     }else{
-//        Regist_LoginVC *reLogVctrl = [[Regist_LoginVC alloc]init];
-    // 用一个nav去包装VC，达到下个页面（也即是登录页）能push的效果；这样相当于加载了一个新的nav；这种情况，Regist_LoginVC对应的VC的view 是不能设置透明的
-//     [self presentViewController:[[UINavigationController alloc] initWithRootViewController: reLogVctrl] animated:YES completion:nil];
-     self.navigationController.navigationBar.hidden = YES;
-     [UIView animateWithDuration:0.3 animations:^{
-      
-         // 平移
-         CGAffineTransform translateForm = CGAffineTransformMakeTranslation(0 , -kScreenHeight);
-         
-         self.regLogScrollow .transform = translateForm;
-     }];
+        //        Regist_LoginVC *reLogVctrl = [[Regist_LoginVC alloc]init];
+        // 用一个nav去包装VC，达到下个页面（也即是登录页）能push的效果；这样相当于加载了一个新的nav；这种情况，Regist_LoginVC对应的VC的view 是不能设置透明的
+        //     [self presentViewController:[[UINavigationController alloc] initWithRootViewController: reLogVctrl] animated:YES completion:nil];
+        self.navigationController.navigationBar.hidden = YES;
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            // 平移
+            CGAffineTransform translateForm = CGAffineTransformMakeTranslation(0 , -kScreenHeight);
+            
+            self.regLogScrollow .transform = translateForm;
+        }];
     }
 }
 #pragma mark - UIImagePickerController代理
@@ -359,11 +359,11 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
         if (imageData) {
             [self method4:imageData];
         }
-       
+        
         self.myPhoto.image = aImage;
     }
-
-        [picker dismissViewControllerAnimated:YES completion:nil];
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 //系统原生未封装请求方法
 #pragma 上传头像
@@ -372,7 +372,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
     NSString *uid = [NSString stringWithFormat:@"http://114.55.43.106/api/upload.html?userId=%@",userid];
     NSURL *uploadURL = [NSURL URLWithString:uid];
     //文件路径处理(随意)
-    NSLog(@"请求路径为%@",uploadURL);
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -392,7 +392,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
             
             NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSDictionary *dic = [self dictionaryWithJsonString:message];
-            NSLog(@"message: %@", message);
+            
             if (dic) {
                 _userLogo = [dic objectForKey:@"userLogo"];
             }
@@ -453,7 +453,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
 - (void)request:(NSString *)url dic:(NSDictionary *)dic{
     [MobClick event:@"ModifyUserName"];
     [UserStore POSTWithParams:dic URL:url success:^(NSURLSessionDataTask *task, id responseObject) {
-        NSLog(@"%@",responseObject);
+        
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         
     }];
@@ -529,7 +529,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
     UIAlertView *weChatLoginAlView = [[UIAlertView alloc]initWithTitle:@"\"MVP\"想打开微信登陆" message:@"" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"打开", nil];
     weChatLoginAlView.tag = 10000;
     [weChatLoginAlView show];
- 
+    
 }
 
 // alertView协议方法,调用微信的接口
@@ -537,9 +537,9 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
     if (buttonIndex == 0) {
         return;
     }else{
-       //  是先执行移除self.regLogScrollow，发送通知，然后才是微信第三方登陆
+        //  是先执行移除self.regLogScrollow，发送通知，然后才是微信第三方登陆
         [MyUtils sendAuthRequest];
-         [self.regLogScrollow removeFromSuperview];
+        [self.regLogScrollow removeFromSuperview];
         // 发送微信登录通知
         [[NSNotificationCenter defaultCenter]postNotificationName:@"wechatLogin" object:nil];
     }
@@ -551,7 +551,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
 }
 #pragma  mark-UITabelveiwDelegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-
+    
     return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -631,9 +631,9 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
     //    _myWantBtn.selected = YES;
     [_myWantBtn addTarget:self action:@selector(mywantBtn:) forControlEvents:UIControlEventTouchUpInside];
     [mineView addSubview: _myWantBtn];
-//    UIImageView *ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 14*kScreenWidthP, 18*kScreenWidthP, 16*kScreenWidthP)];
-//    ImageView.image = [UIImage imageNamed:@"fabbi_want"];
-//    [mineView addSubview:ImageView];
+    //    UIImageView *ImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 14*kScreenWidthP, 18*kScreenWidthP, 16*kScreenWidthP)];
+    //    ImageView.image = [UIImage imageNamed:@"fabbi_want"];
+    //    [mineView addSubview:ImageView];
     
     _myCollectionBtn = [[MineButton alloc]initWithFrame:CGRectMake(1*kScreenWidthP+kScreenWidth/3, 1*kScreenWidthP, kScreenWidth/3-2*kScreenWidthP, 45*kScreenWidthP)];
     [_myCollectionBtn setTitle:@"收藏" forState:UIControlStateNormal];
@@ -653,7 +653,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
     _myCommentBtn.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:13*kScreenWidthP];
     [_myCommentBtn setImage:[UIImage imageNamed:@"fabbi_comment"] forState:UIControlStateNormal];
     [_myCommentBtn setImage:[UIImage imageNamed:@"fabbi_commented"] forState:UIControlStateSelected];
-//    _myCommentBtn.imageEdgeInsets = UIEdgeInsetsMake(13*kScreenWidthP, <#CGFloat left#>, <#CGFloat bottom#>, <#CGFloat right#>)
+    //    _myCommentBtn.imageEdgeInsets = UIEdgeInsetsMake(13*kScreenWidthP, <#CGFloat left#>, <#CGFloat bottom#>, <#CGFloat right#>)
     [_myCommentBtn addTarget:self action:@selector(mywantBtn:) forControlEvents:UIControlEventTouchUpInside];
     [mineView addSubview: _myCommentBtn];
     if (_mineButtonSelected == MineButtonSelectedWant) {
@@ -699,14 +699,14 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
         mineCell.selectionStyle = UITableViewCellSelectionStyleNone;
         return mineCell;
     }
-   
-//    LibraryMovieModel *model = self.dataArray[indexPath.row];
+    
+    //    LibraryMovieModel *model = self.dataArray[indexPath.row];
     
     
 }
 #pragma 首次进入请求 <想要> 数据
 - (void)requestFirst{
-     [self removeContent];
+    [self removeContent];
     _myCollectionBtn.selected = NO;
     NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
     NSNumber *number = [NSNumber numberWithInt:1];
@@ -723,17 +723,17 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
         return;
     }
     [self removeContent];
-   
+    
     if (btn == _myWantBtn) {
         [MobClick event:@"lookMyWant"];
         _mineTbView.mj_footer.hidden = YES;
         _mineButtonSelected = MineButtonSelectedWant;
         _mineTbView.separatorStyle = NO;
-      
+        
         _myWantBtn.selected = YES;
         _myCommentBtn.selected = NO;
         _myCollectionBtn.selected = NO;
-
+        
         NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
         NSNumber *number = [NSNumber numberWithInt:1];
         NSDictionary *dic = @{
@@ -746,7 +746,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
     }else if (btn ==_myCommentBtn){
         [MobClick event:@"lookMyComment"];
         _mineTbView.mj_footer.hidden = NO;
-         _mineTbView.separatorStyle = YES;
+        _mineTbView.separatorStyle = YES;
         _mineButtonSelected = MineButtonSelectedComment;
         _myWantBtn.selected = NO;
         _myCommentBtn.selected = YES;
@@ -764,18 +764,18 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
         [MobClick event:@"lookMyCollection"];
         _mineTbView.mj_footer.hidden = YES;
         _mineButtonSelected = MineButtonSelectedCollection;
-         _mineTbView.separatorStyle = NO;
+        _mineTbView.separatorStyle = NO;
         _myWantBtn.selected = NO;
         _myCommentBtn.selected = NO;
         _myCollectionBtn.selected = YES;
         
-
+        
         NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
         NSNumber *number = [NSNumber numberWithInt:2];
         NSDictionary *dic = @{
                               @"userId":uid,
                               @"hobbyType":number
-            
+                              
                               };
         [self requestUrl:@"api/queryUserHobby.html" dic:dic];
     }
@@ -787,7 +787,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
 }
 - (void)requestUrl:(NSString *)url dic:(NSDictionary*)dic{
     [UserStore POSTWithParams:dic URL:url success:^(NSURLSessionDataTask *task, id responseObject) {
-        NSLog(@"222222222======");
+        
         if (_mineButtonSelected == MineButtonSelectedCollection) {
             if (_collectionArr.count > 0) {
                 [_collectionArr removeAllObjects];
@@ -823,7 +823,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
                 _mineTbView.mj_footer.hidden = YES;
                 [self noContentHint];
             }
-
+            
         }else{
             
             NSArray *commentArr = [responseObject objectForKey:@"resultList"];
@@ -845,11 +845,11 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
                 _mineTbView.mj_footer.hidden = YES;
             }
         }
-
+        
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         
     }];
-  
+    
 }
 #pragma 获取更多评论
 - (void)requestCommentMore{
@@ -870,12 +870,12 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
                 
             });
         }else{
-           _mineTbView.mj_footer.hidden = YES;
+            _mineTbView.mj_footer.hidden = YES;
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         
     }];
-   
+    
 }
 #pragma 无数据时提示
 - (void)noContentHint{
@@ -905,7 +905,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
         
     }else{
         _noContentL.text = @"你还没有发表任何评论哦";
-       [_nocontentB setTitle:@"去逛逛" forState:UIControlStateNormal];
+        [_nocontentB setTitle:@"去逛逛" forState:UIControlStateNormal];
     }
 }
 - (void)removeContent{
@@ -963,7 +963,7 @@ typedef NS_ENUM(NSUInteger, MineButtonSelected) {
         backView.hidden = NO;
         setView.hidden = NO;
         _setUpBtn.hidden = NO;
-         _labelA.hidden = NO;
+        _labelA.hidden = NO;
         for (int i = 1; i<3; i++) {
             UILabel *label = [self.view viewWithTag:i+10000];
             label.hidden = NO;

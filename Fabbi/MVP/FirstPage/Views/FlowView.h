@@ -14,15 +14,15 @@
 - (void)want:(BOOL)isLike sucess:(void (^)(id responseObject))sucess failure:(void(^)(NSError *error))failure;
 - (void)toLink;
 - (void)tologin;
-
+- (void)noContent;
 @end
 @interface FlowView : UIView
 @property (nonatomic,strong)UIButton *myCommitBtn;
 @property (nonatomic,strong)UIButton *starBtn;
 @property (nonatomic,strong)UIButton *toLinkBtn;
 @property (nonatomic,strong)NSString *from;
-@property (nonatomic,strong)NSDictionary *dic;
+
 @property (nonatomic,weak)id<flowViewDelegate>delegate;
 - (instancetype)initWithFrame:(CGRect)frame from:(NSString *)from;
-- (void)Dic:(NSDictionary *)dic;
+- (void)contentDictionary:(NSDictionary *)dic;
 @end

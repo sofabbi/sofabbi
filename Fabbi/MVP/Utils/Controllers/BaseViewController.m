@@ -9,20 +9,52 @@
 #import "MyUtils.h"
 #import "MJRefreshHeader.h"
 #import "MJRefreshFooter.h"
-
-
+#import "VFSNavigationBar.h"
+const CGFloat VFSNavigationBarHeightIncrease = 38.f;
 @interface BaseViewController ()<UIGestureRecognizerDelegate>
 @end
 
 @implementation BaseViewController
-
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    self.navigationItem.hidesBackButton = YES;
+    UIEdgeInsets insets = UIEdgeInsetsMake(0, -1000, 0, 0); // or (0, 0, -10.0, 0)
+    UIImage *alignedImage = [[UIImage imageNamed:@"back"] imageWithAlignmentRectInsets:insets];
+    [[UINavigationBar appearance] setBackIndicatorImage:alignedImage];
+    [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:alignedImage];
+    [[UINavigationBar appearance] setTitleVerticalPositionAdjustment:(CGFloat)VFSNavigationBarHeightIncrease forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"back"] forBarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+//    UINavigationController *nav = [[UINavigationController alloc]initWithNavigationBarClass:[VFSNavigationBar class] toolbarClass:nil];
+    
     self.navigationItem.hidesBackButton = YES;
+    UIEdgeInsets insets = UIEdgeInsetsMake(0, -1000, 0, 0); // or (0, 0, -10.0, 0)
+    UIImage *alignedImage = [[UIImage imageNamed:@"back"] imageWithAlignmentRectInsets:insets];
+    [[UINavigationBar appearance] setBackIndicatorImage:alignedImage];
+    [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:alignedImage];
+    [[UINavigationBar appearance] setTitleVerticalPositionAdjustment:(CGFloat)VFSNavigationBarHeightIncrease forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
 // 项目上的小圈圈，暂时不用吧
 //   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+}
+- (void)bar{
+    NSArray *classNamesToReposition = @[@"UINavigationButton"];
+    
+    for (UIView *view in [self.navigationController.navigationBar subviews]) {
+        
+        if ([classNamesToReposition containsObject:NSStringFromClass([view class])]) {
+            
+            CGRect frame = [view frame];
+            frame.origin.y -= VFSNavigationBarHeightIncrease;
+            
+            [view setFrame:frame];
+        }
+    }
 }
 - (BOOL)isRootViewController
 {

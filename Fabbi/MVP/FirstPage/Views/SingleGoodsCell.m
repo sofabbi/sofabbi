@@ -32,7 +32,7 @@
         
         UILabel *labelC = [MyUtils createLabelFrame:CGRectMake(kScreenWidth/2 - 50*kScreenWidthP, 10*kScreenWidthP, 100*kScreenWidthP, 30*kScreenWidthP) backgroundColor:RGBA(215, 215, 215, 0) title:@"相关商品" font:15];
         labelC.textAlignment = NSTextAlignmentCenter;
-      
+        
         [goodView addSubview:labelC];
         [self.contentView addSubview:goodView];
         
@@ -44,7 +44,7 @@
         _firgoodImageView = [MyUtils createImageViewFrame:CGRectMake(30*kScreenWidthP, 10*kScreenWidthP, 90*kScreenWidthP, 90*kScreenWidthP) imageName:nil  cornerRadius:0.f clipsToBounds:YES userInteractionEnabled:YES];
         [_firgoodLabel addSubview:_firgoodImageView];
         
-       
+        
         _firgoodnameLabel = [MyUtils createLabelFrame:CGRectMake(150*kScreenWidthP, 10*kScreenWidthP, 80*kScreenWidthP, 30*kScreenWidthP) backgroundColor:RGBA(215, 215, 215, 0) title:@"邱成的衣服"font:12.0f];
         [_firgoodLabel addSubview:_firgoodnameLabel];
         
@@ -63,11 +63,11 @@
         UIImageView *nextImageView = [MyUtils createImageViewFrame:CGRectMake(kScreenWidth-40*kScreenWidthP, 48*kScreenWidthP, 10*kScreenWidthP, 10*kScreenWidthP) imageName:@"Group 10" cornerRadius:0.f clipsToBounds:YES userInteractionEnabled:YES];
         [_firgoodLabel addSubview:nextImageView];
         
-     
+        
         
         // label2
         _secgoodLabel = [MyUtils createLabelFrame:CGRectMake(0, 160*kScreenWidthP, kScreenWidth, 120*kScreenWidthP) backgroundColor:RGBA(215, 215, 215, 0) title:nil font:0.f];
-         [goodView addSubview:_secgoodLabel];
+        [goodView addSubview:_secgoodLabel];
         
         _secgoodImageView = [MyUtils createImageViewFrame:CGRectMake(30*kScreenWidthP, 10*kScreenWidthP, 90*kScreenWidthP, 90*kScreenWidthP) imageName:nil  cornerRadius:0.f clipsToBounds:YES userInteractionEnabled:YES];
         [_secgoodLabel addSubview:_secgoodImageView];
@@ -101,7 +101,7 @@
 // 弹出浮层
 - (void)firgoodsTapGesture:(UITapGestureRecognizer *)tap{
     [self.delegate addFloatingView];
-   
+    
 }
 
 - (void)configSingleGoodPageModel:(SingleGoodsModel *)SingleGoodsModel{

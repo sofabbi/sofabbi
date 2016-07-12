@@ -14,7 +14,7 @@
     UILabel *mainTitle;
     UILabel *subTitle;
 }
-@property (nonatomic,strong) DTAttributedLabel *lable;
+@property (nonatomic, strong) DTAttributedLabel *lable;
 
 @end
 @implementation DetailPageRelevantCell
@@ -32,18 +32,22 @@
         UIView *titlView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 98*kScreenWidthP)];
         titlView.backgroundColor = [UIColor clearColor];
         [self addSubview:titlView];
+        
         UILabel *line1 = [[UILabel alloc]initWithFrame:CGRectMake(138*kScreenWidthP, 26*kScreenWidthP, 2*kScreenWidthP, 12*kScreenWidthP)];
-        [titlView addSubview:line1];
         line1.backgroundColor = RGBA(34, 34, 34, 1);
+        [titlView addSubview:line1];
+        
         UILabel *line2 = [[UILabel alloc]initWithFrame:CGRectMake(kScreenWidth -138*kScreenWidthP, 26*kScreenWidthP, 2*kScreenWidthP, 12*kScreenWidthP)];
         line2.backgroundColor = RGBA(34, 34, 34, 1);
         [titlView addSubview:line2];
+        
         mainTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 64*kScreenWidthP, 22*kScreenWidthP)];
         mainTitle.center = CGPointMake(kScreenWidth/2, 31*kScreenWidthP);
         mainTitle.font = [UIFont boldSystemFontOfSize:16];
         mainTitle.text = @"品牌故事";
         mainTitle.textAlignment = NSTextAlignmentCenter;
         [titlView addSubview:mainTitle];
+        
         subTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(mainTitle.frame)+20*kScreenWidthP, kScreenWidth, 25*kScreenWidthP)];
         subTitle.font = [UIFont boldSystemFontOfSize:18];
         subTitle.text = @"Olympia Activewear";
@@ -56,6 +60,7 @@
     return self;
 }
 - (void)addTextAttributedLabel:(NSDictionary *)dic{
+    subTitle.text = [dic objectForKey:@"itemBrandName"];
     NSString * htmlcontent = [NSString stringWithFormat:@"<div id=\"webview_content_wrapper\">%@</div>", [dic objectForKey:@"itemContens"]];
     self.lable.attributedString = [DetailPageRelevantCell _attributedStringForSnippetUsingiOS6Attributes:NO html:htmlcontent];
     [_lable sizeToFit];

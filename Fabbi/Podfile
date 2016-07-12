@@ -12,4 +12,4 @@ pod 'MJExtension'
 pod 'GTSDK'
 pod 'DTCoreText'
 pod 'UMengAnalytics-NO-IDFA'
-
+pod 'Bugly'

@@ -25,13 +25,12 @@
 #import <MJRefresh/MJRefresh.h>
 
 @interface FirstPageViewController ()<UITableViewDataSource,UITableViewDelegate,CLLocationManagerDelegate>{
-   
     BOOL  _isNetWork; // 是否有网络
 }
-@property (nonatomic,strong) UITableView *firstPageTbView;
-@property (nonatomic,strong) NSMutableArray *firstPageArray;
+@property (nonatomic, strong) UITableView *firstPageTbView;
+@property (nonatomic, strong) NSMutableArray *firstPageArray;
 @property (nonatomic, strong) CLLocationManager *localManager;
-@property (nonatomic,strong)UILabel *netWorkL;
+@property (nonatomic, strong) UILabel *netWorkL;
 @end
 
 @implementation FirstPageViewController
@@ -40,8 +39,7 @@
     self.navigationController.navigationBar.hidden = NO;
     CFTimeInterval startTime=[[NSDate new] timeIntervalSince1970];
     _loadNewdataTime = startTime;
-    
-   [self checkNetWork];
+    [self checkNetWork];
 }
 
 - (void)viewDidLoad {
@@ -59,7 +57,7 @@
     [self createTbView];
     
     [self getLocation];
-
+    
 }
 
 #pragma 导航栏左右
@@ -77,19 +75,19 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:backButton];
 }
 /**
-  当没有登陆时，到登陆页面
+ 当没有登陆时，到登陆页面
  */
 - (void)toMineVctrl:(UIButton *)btn{
-   NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
-   
+    NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
+    
     if (uid) {
         MineViewController *mineVctrl = [[MineViewController alloc]init];
-        [self.navigationController pushViewController:mineVctrl animated:YES];
+        [self pushViewController:mineVctrl animated:YES];
     }else{
         LoginViewController *loginVctrl = [[LoginViewController alloc]init];
         loginVctrl.isFirstPage = @"FirstPageViewController";
-        [self.navigationController pushViewController:loginVctrl animated:YES];
-     }
+        [self pushViewController:loginVctrl animated:YES];
+    }
 }
 
 /**
@@ -105,57 +103,57 @@
     
     NSString *time = [NSDate timeStamp:_loadNewdataTime];
     _moreStartTime = _loadNewdataTime;
-  
-            NSDictionary *dic = @{
-                                  @"dateTime":time
-                                  };
-            [UserStore POSTWithParams:dic URL:@"api/queryItemAndSpecialList.html" success:^(NSURLSessionDataTask *task, id responseObject) {
+    
+    NSDictionary *dic = @{
+                          @"dateTime":time
+                          };
+    [UserStore POSTWithParams:dic URL:@"api/queryItemAndSpecialList.html" success:^(NSURLSessionDataTask *task, id responseObject) {
+        
+        NSArray *arr = (NSArray *)responseObject;
+        if (arr.count>0) {
+            NSMutableArray *array = [NSMutableArray array];
+            for (NSDictionary *dic in arr) {
+                FirstPageModel *model = [[FirstPageModel alloc]init];
+                model.goodsType = [dic objectForKey:@"goodsType"];
+                model.resultCode = [dic objectForKey:@"resultCode"];
+                model.createTime = [dic objectForKey:@"createTime"];
+                model.resultMessage = [dic objectForKey:@"resultMessage"];
+                model.firstItemVoModel = [dic objectForKey:@"itemVo"];
+                model.firstSpecialVoModel = [dic objectForKey:@"specialVo"];
                 
-                NSArray *arr = (NSArray *)responseObject;
-                if (arr.count>0) {
-                    NSMutableArray *array = [NSMutableArray array];
-                    for (NSDictionary *dic in arr) {
-                        FirstPageModel *model = [[FirstPageModel alloc]init];
-                        model.goodsType = [dic objectForKey:@"goodsType"];
-                        model.resultCode = [dic objectForKey:@"resultCode"];
-                        model.createTime = [dic objectForKey:@"createTime"];
-                        model.resultMessage = [dic objectForKey:@"resultMessage"];
-                        model.firstItemVoModel = [dic objectForKey:@"itemVo"];
-                        model.firstSpecialVoModel = [dic objectForKey:@"specialVo"];
-
-                        if ([model.goodsType isEqualToNumber:[NSNumber numberWithDouble:1]]) {
-                            NSNumber *isShow = [model.firstItemVoModel objectForKey:@"itemIsShow"];
-                            
-                            if (((NSNull *)isShow == [NSNull null])) {
-                                continue;
-
-                            }
-                           
-                        }
-                        [array addObject:model];
+                if ([model.goodsType isEqualToNumber:[NSNumber numberWithDouble:1]]) {
+                    NSNumber *isShow = [model.firstItemVoModel objectForKey:@"itemIsShow"];
+                    
+                    if (((NSNull *)isShow == [NSNull null])) {
+                        continue;
+                        
                     }
                     
-                    if (array.count > 0) {
-                        NSMutableArray *ReverseArr = [NSMutableArray array];
-                        [array enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                            [ReverseArr addObject:obj];
-                        }];
-                        [_firstPageArray addObject:ReverseArr];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [_firstPageTbView reloadData];
-                            [_firstPageTbView.mj_header endRefreshing];
-                        });
-                        return ;
-                    }else{
-                        [self loadnewD];
-                    }
-                }else{
-                    [self loadnewD];
                 }
-                
-            } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                NSLog(@"%@",error);
-            }];
+                [array addObject:model];
+            }
+            
+            if (array.count > 0) {
+                NSMutableArray *ReverseArr = [NSMutableArray array];
+                [array enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [ReverseArr addObject:obj];
+                }];
+                [_firstPageArray addObject:ReverseArr];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_firstPageTbView reloadData];
+                    [_firstPageTbView.mj_header endRefreshing];
+                });
+                return ;
+            }else{
+                [self loadnewD];
+            }
+        }else{
+            [self loadnewD];
+        }
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"%@",error);
+    }];
     
 }
 
@@ -212,15 +210,15 @@
             });
             return ;
         }else{
-//            最早数据到2016-6-25号为:1466824861
+            //            最早数据到2016-6-25号为:1466824861
             if (_moreStartTime < 1466824861) {
                 [self.firstPageTbView.mj_footer endRefreshingWithNoMoreData];
                 self.firstPageTbView.mj_footer.hidden = YES;
                 return;
             }else{
-               [self loadMoreData];
+                [self loadMoreData];
             }
-           
+            
         }
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
@@ -255,7 +253,7 @@
     
     UILabel *labelB = [MyUtils createLabelFrame:CGRectMake(235*kScreenWidthP, 20*kScreenWidthP, 120*kScreenWidthP, 0.5*kScreenWidthP) backgroundColor:RGBA(186, 186, 186, 1) title:nil font:0.f];
     [view addSubview:labelB];
-  
+    
     UILabel *labelC = [MyUtils createLabelFrame:CGRectMake(kScreenWidth/2 - 40*kScreenWidthP, 4*kScreenWidthP, 80*kScreenWidthP, 32*kScreenWidthP) backgroundColor:RGBA(186, 186, 186, 0) title:@"nil" font:14*kScreenWidthP];
     labelC.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14*kScreenWidthP];
     labelC.textColor = RGBA(186, 186, 186, 1);
@@ -273,7 +271,7 @@
             
         }
         NSLog(@"times========%@",timeStr);
-      NSString *time = [NSDate firstTimeStr:timeStr];
+        NSString *time = [NSDate firstTimeStr:timeStr];
         labelC.text = time;
     }
     
@@ -293,7 +291,7 @@
     if (indexPath.row == (arr.count -1)) {
         return 305*kScreenWidthP;
     }else{
-         return 315*kScreenWidthP;
+        return 315*kScreenWidthP;
     }
 }
 
@@ -305,7 +303,7 @@
     return arr.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-   static NSString *firstPageSpecialCellId = @"firstPageSpecialCellId";
+    static NSString *firstPageSpecialCellId = @"firstPageSpecialCellId";
     FirstPageSpecialCell *firstPageSpecialCell = [tableView dequeueReusableCellWithIdentifier:firstPageSpecialCellId];
     
     if (firstPageSpecialCell == nil) {
@@ -329,18 +327,17 @@
         if ([googType isEqualToString:@"1"]) {
             DetailPageViewController *detailVctrl = [[DetailPageViewController alloc]init];
             detailVctrl.itemId = [model.firstItemVoModel objectForKey:@"id"];
-            
+            detailVctrl.navigationItem.hidesBackButton = YES;
             self.navigationController.view.backgroundColor = [UIColor whiteColor];
-            [self.navigationController pushViewController:detailVctrl animated:YES];
+            [self pushViewController:detailVctrl animated:YES];
         }else if ([googType isEqualToString:@"2"]){
             GoodsViewController *goodsVctrl = [[GoodsViewController alloc]init];
+            goodsVctrl.navigationItem.hidesBackButton = YES;
             goodsVctrl.speicalId = [model.firstSpecialVoModel objectForKey:@"id"];
-            [self.navigationController pushViewController:goodsVctrl animated:YES];
+            [self pushViewController:goodsVctrl animated:YES];
         }
-        
-  
     }
-   }
+}
 
 
 #pragma mark 创建刷新视图
@@ -354,8 +351,8 @@
     
     //输入刷新状态立即
     [_firstPageTbView.mj_header beginRefreshing];
-   
-   MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
+    
+    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
     footer.refreshingTitleHidden = YES;
     footer.stateLabel.hidden = YES;
     _firstPageTbView.mj_footer = footer;
@@ -382,14 +379,14 @@
                 [LFTool setBool:_isNetWork forKey:LFIsNetWork];
                 _firstPageTbView.hidden = NO;
                 [self.netWorkL removeFromSuperview];
-//                [self loadNewData];
+                //                [self loadNewData];
                 break;
             case AFNetworkReachabilityStatusReachableViaWiFi:
                 _isNetWork  = YES;
                 [LFTool setBool:_isNetWork forKey:LFIsNetWork];
-           _firstPageTbView.hidden = NO;
+                _firstPageTbView.hidden = NO;
                 _netWorkL.hidden = YES;
-//                [self loadNewData];
+                //                [self loadNewData];
                 [self.netWorkL removeFromSuperview];
                 break;
             case AFNetworkReachabilityStatusUnknown:
@@ -398,7 +395,7 @@
                 _isNetWork = YES;
                 [LFTool setBool:_isNetWork forKey:LFIsNetWork];
                 [self.netWorkL removeFromSuperview];
-//                [self loadNewData];
+                //                [self loadNewData];
                 break;
             default:
                 break;
@@ -441,7 +438,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     [_localManager stopUpdatingLocation];
-   NSString *ipv4 = [NSString getIPAddress:YES];
+    NSString *ipv4 = [NSString getIPAddress:YES];
     NSString *uuid = [NSString getDeviceId];
     CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
     NSString *location = [NSString stringWithFormat:@"%f,%f",newLocation.coordinate.latitude,newLocation.coordinate.longitude];
@@ -461,7 +458,7 @@
     if (uid) {
         [dic setObject:uid forKey:@"uid"];
     }
-   
+    
     [UserStore GETWithParams:dic success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"%@",responseObject);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
@@ -488,5 +485,13 @@
     }
     return _netWorkL;
 }
-
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
+    UIBarButtonItem *newBackButton =
+    [[UIBarButtonItem alloc] initWithTitle:@""
+                                     style:UIBarButtonItemStyleBordered
+                                    target:nil
+                                    action:nil];
+    [[self navigationItem] setBackBarButtonItem:newBackButton];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
 @end

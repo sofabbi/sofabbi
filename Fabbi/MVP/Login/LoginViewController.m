@@ -592,10 +592,8 @@ typedef NS_ENUM(NSInteger, TYPEVIEW) {
                 [[NSUserDefaults standardUserDefaults] setObject:[refreshDict objectForKey:kWeiXinRefreshToken] forKey:kWeiXinRefreshToken];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 // 当存在reAccessToken不为空时直接执行AppDelegate中的wechatLoginByRequestForUserInfo方法
-                AppDelegate *appDelegate = (AppDelegate *) [[UIApplication sharedApplication] delegate];
-                [appDelegate wechatLoginByRequestForUserInfo:^(NSDictionary *task, NSError *error) {
-                    
-                }];
+//                AppDelegate *appDelegate = (AppDelegate *) [[UIApplication sharedApplication] delegate];
+               
                 
             }
             else {
@@ -697,7 +695,7 @@ typedef NS_ENUM(NSInteger, TYPEVIEW) {
     // 请求用户数据
     [manager GET:userUrlStr parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"请求用户信息的response = %@", responseObject);
-        NSMutableDictionary *userDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+//        NSMutableDictionary *userDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"获取用户信息时出错 = %@", error);

@@ -16,29 +16,28 @@
 #define space 20*kScreenWidthP
 
 @interface RelatedProductsCell ()<relatedProductsViewDelegate,DTLazyImageViewDelegate,DTAttributedTextContentViewDelegate>
-@property (nonatomic,strong) DTAttributedLabel *lable;
+@property (nonatomic, strong) DTAttributedLabel *lable;
 @end
 @implementation RelatedProductsCell
 +(CGFloat)getCellHeight:(NSDictionary *)model{
-    DTAttributedLabel*lable = [[DTAttributedLabel alloc] initWithFrame: CGRectMake(20*kScreenWidthP, 20*kScreenWidthP, kScreenWidth-40*kScreenWidthP, FLT_MAX)];
-    NSMutableString * htmlcontent =  [NSMutableString stringWithFormat:@"%@",[model objectForKey:@"specialImg"]];
-  NSString * htmlcontent1 = [htmlcontent stringByReplacingOccurrencesOfString:@"</p>" withString:@""];
-   NSString * htmlcontent2 = [htmlcontent1 stringByReplacingOccurrencesOfString:@"<p>" withString:@""];
-//   NSString * htmlcontent3 = [htmlcontent2 stringByReplacingOccurrencesOfString:@" " withString:@""];
-  NSString * htmlcontent3 = [NSString stringWithFormat:@"</p>%@<p>",htmlcontent2];
-    lable.attributedString = [RelatedProductsCell _attributedStringForSnippetUsingiOS6Attributes:NO html:htmlcontent3];
-    lable.layoutFrameHeightIsConstrainedByBounds = YES;
-    lable.edgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
-
+    DTAttributedLabel*lable = [[DTAttributedLabel alloc] initWithFrame: CGRectMake(20*kScreenWidthP, 15*kScreenWidthP, kScreenWidth-40*kScreenWidthP, FLT_MAX)];
+//    富文本数据源处理
+    NSString * htmlcontent =  [NSMutableString stringWithFormat:@"%@",[model objectForKey:@"specialImg"]];
+    htmlcontent = [htmlcontent stringByReplacingOccurrencesOfString:@"</p>" withString:@""];
+    htmlcontent = [htmlcontent stringByReplacingOccurrencesOfString:@"<p>" withString:@""];
+    htmlcontent = [htmlcontent stringByReplacingOccurrencesOfString:@"<br>" withString:@""];
+    htmlcontent = [NSString stringWithFormat:@"<p>%@</p>",htmlcontent];
+    
+    lable.attributedString = [RelatedProductsCell _attributedStringForSnippetUsingiOS6Attributes:NO html:htmlcontent];
+    
     [lable sizeToFit];
-   CGFloat height = lable.frame.size.height + 14*kScreenWidthP;
+    CGFloat height = lable.frame.size.height + 35*kScreenWidthP;
     NSArray *itemList = [model objectForKey:@"itemList"];
     if (itemList.count > 0) {
-        height +=30*kScreenWidthP;
+        height += 25*kScreenWidthP;
         height += itemList.count *(RelatedProductsH + space);
-        height +=15*kScreenWidthP;
     }
-   
+    
     return height;
 }
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
@@ -46,17 +45,17 @@
         _lable = [[DTAttributedLabel alloc] initWithFrame: CGRectMake(20*kScreenWidthP, 15*kScreenWidthP, kScreenWidth-40*kScreenWidthP, FLT_MAX)];
         _lable.delegate = self;
         [self addSubview:_lable];
-        
     }
     return self;
 }
 - (void)setContentDictionary:(NSDictionary *)model{
     _contentDictionary = model;
     NSString * htmlcontent =  [model objectForKey:@"specialImg"];
+    //    富文本数据源处理
     htmlcontent = [htmlcontent stringByReplacingOccurrencesOfString:@"</p>" withString:@""];
     htmlcontent = [htmlcontent stringByReplacingOccurrencesOfString:@"<p>" withString:@""];
-//    htmlcontent = [htmlcontent stringByReplacingOccurrencesOfString:@" " withString:@""];
-    htmlcontent = [NSString stringWithFormat:@"</p>%@<p>",htmlcontent];
+    htmlcontent = [htmlcontent stringByReplacingOccurrencesOfString:@"<br>" withString:@""];
+    htmlcontent = [NSString stringWithFormat:@"<p>%@</p>",htmlcontent];
     self.lable.attributedString = [RelatedProductsCell _attributedStringForSnippetUsingiOS6Attributes:NO html:htmlcontent];
     [_lable sizeToFit];
     _lable.frame = CGRectMake(20*kScreenWidthP, 15*kScreenWidthP, kScreenWidth-40*kScreenWidthP, _lable.frame.size.height);
@@ -90,12 +89,12 @@
             [self addSubview:relatedProductsView];
         }
     }
-
+    
 }
 + (NSAttributedString *)_attributedStringForSnippetUsingiOS6Attributes:(BOOL)useiOS6Attributes html:(NSString *)htmlStr
 {
     // Load HTML data
-  
+    
     NSData *data = [htmlStr dataUsingEncoding:NSUTF8StringEncoding];
     
     // Create attributed string from HTML
@@ -106,8 +105,6 @@
         
         for (DTHTMLElement *oneChildElement in element.childNodes)
         {
-
-            
             NSLog(@"oneChildElement.text====%@",oneChildElement.name);
             NSString *str = [NSString stringWithFormat:@"%@",oneChildElement.name];
             if ([str isEqualToString:@"img"]) {
@@ -122,7 +119,7 @@
                 oneChildElement.paragraphStyle.maximumLineHeight = element.textAttachment.displaySize.height;
                 
             }
-
+            
         }
     };
     
@@ -162,9 +159,9 @@
         imageView.image = [(DTImageTextAttachment *)attachment image];
         
         // url for deferred loading
-//        ?imageView2/1/w/%d/h/300
+        //        ?imageView2/1/w/%d/h/300
         NSString *imageUrl = [NSString stringWithFormat:@"%@",attachment.contentURL];
-       NSRange range = [imageUrl rangeOfString:@"jpg"];
+        NSRange range = [imageUrl rangeOfString:@"jpg"];
         NSString *urlImag;
         if (range.length > 0) {
             NSArray *array = [imageUrl componentsSeparatedByString:@"jpg"];
@@ -173,7 +170,7 @@
             }
         }
         [imageView sd_setImageWithURL:[NSURL URLWithString:urlImag] placeholderImage:[UIImage imageNamed:@"placeholderImage"]];
-//        imageView.url = attachment.contentURL;
+        //        imageView.url = attachment.contentURL;
         
         // if there is a hyperlink then add a link button on top of this image
         if (attachment.hyperLinkURL)
@@ -188,13 +185,13 @@
             button.GUID = attachment.hyperLinkGUID;
             
             // use normal push action for opening URL
-//            [button addTarget:self action:@selector(linkPushed:) forControlEvents:UIControlEventTouchUpInside];
+            //            [button addTarget:self action:@selector(linkPushed:) forControlEvents:UIControlEventTouchUpInside];
             
             // demonstrate combination with long press
-//            UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(linkLongPressed:)];
-//            [button addGestureRecognizer:longPress];
+            //            UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(linkLongPressed:)];
+            //            [button addGestureRecognizer:longPress];
             
-//            [imageView addSubview:button];
+            //            [imageView addSubview:button];
         }
         
         return imageView;
@@ -280,7 +277,7 @@
 
 // 弹出浮层
 - (void)firgoodsTapGesture:(UITapGestureRecognizer *)tap{
-//    [self.delegate addFloatingView];
+    //    [self.delegate addFloatingView];
     
 }
 @end

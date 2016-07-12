@@ -51,7 +51,7 @@
 // 退出
 - (void)back:(UIButton *)btn{
     [self.delegate backFirstPageVctrl];
- 
+    
 }
 -(void)removeTimer{
     [_timer invalidate];

@@ -278,24 +278,29 @@
     {
         CGRect rect = [self getFrameInWindow:browseItem.smallImageView];
         CGAffineTransform transform = CGAffineTransformMakeRotation(0);
-        if(_currentOrientation == UIDeviceOrientationLandscapeLeft)
-        {
-            transform = CGAffineTransformMakeRotation(- M_PI / 2);
-            rect = CGRectMake(rect.origin.y, MSS_SCREEN_WIDTH - rect.size.width - rect.origin.x, rect.size.height, rect.size.width);
-        }
-        else if(_currentOrientation == UIDeviceOrientationLandscapeRight)
-        {
-            transform = CGAffineTransformMakeRotation(M_PI / 2);
-            rect = CGRectMake(MSS_SCREEN_HEIGHT - rect.size.height - rect.origin.y, rect.origin.x, rect.size.height, rect.size.width);
-        }
+//        if(_currentOrientation == UIDeviceOrientationLandscapeLeft)
+//        {
+//            transform = CGAffineTransformMakeRotation(- M_PI / 2);
+//            rect = CGRectMake(rect.origin.y, MSS_SCREEN_WIDTH - rect.size.width - rect.origin.x, rect.size.height, rect.size.width);
+//        }
+//        else if(_currentOrientation == UIDeviceOrientationLandscapeRight)
+//        {
+//            transform = CGAffineTransformMakeRotation(M_PI / 2);
+//            rect = CGRectMake(MSS_SCREEN_HEIGHT - rect.size.height - rect.origin.y, rect.origin.x, rect.size.height, rect.size.width);
+//        }
         if ([Direction isEqualToString:@"up"]) {
             [UIView animateWithDuration:.3 animations:^{
                 browseCell.zoomScrollView.zoomImageView.frame = CGRectMake(rect.origin.x, rect.origin.y - 150*kScreenWidthP, rect.size.width, rect.size.height);
             } completion:^(BOOL finished) {
                 if (finished) {
-                    [self dismissViewControllerAnimated:NO completion:^{
+                    [UIView animateWithDuration:0 delay:0.5 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+                        [self dismissViewControllerAnimated:NO completion:^{
+                            
+                        }];
+                    } completion:^(BOOL finished) {
                         
                     }];
+                    
                     
                 }
             }];

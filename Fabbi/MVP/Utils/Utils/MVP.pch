@@ -59,7 +59,7 @@
 
 #define API_BI @"http://bi.sofabbi.com/applog?"
 
-
+//微信
 #define WX_BASE_URL  @"https://api.weixin.qq.com/sns"
 #define WX_UNION_ID @"unionid"
 #define kWeiXinAppId @"wxe61a3e72eb7dccf4"
@@ -71,10 +71,16 @@
 #define KWeiBoAppkey @"4039877335"
 #define KWeiBoAppSecret @"29003c714c4c6c724327591f4977e25f"
 #define KWeiBoOAuthUrl   @"https://api.weibo.com/oauth2/default.html"
+//QQ
 #define KQQAPPID16  @"41E40778"
 #define KQQAPPID @"1105463160"
 #define KQQAPPKEY @"CVflTL84YT42em7W"
 #define KYMAppkey @"57747827e0f55aeaf8001080"
+//bugly
+
+#define KBUGAPPID @"900039106"
+#define KBUGAPPKEY @"jHABkJJu49LwLcvR"
+
 //获取ticket
 #define GETTICKET @"http://api.eatfit.com.cn/common/token?"
 #define GETIMAGE @"http://api.eatfit.com.cn/v2/item/week/get?"
@@ -95,5 +101,8 @@ typedef enum ScrollDirection {
 
 #import "NSString+IPAddress.h"
 #import "NSArray+judge.h"
+#import "NSNumber+Judge.h"
+#import <MBProgressHUD/MBProgressHUD.h>
+#import <DTCoreText/DTCoreText.h>
 #endif /* MVP_pch */
 

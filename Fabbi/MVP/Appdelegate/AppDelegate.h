@@ -18,6 +18,5 @@ typedef void (^userinfo)(NSDictionary *task, NSError *error);
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) NSString *WBtoken;
 
-- (void)wechatLoginByRequestForUserInfo:(userinfo)block;
 @end
 

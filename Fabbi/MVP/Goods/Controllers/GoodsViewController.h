@@ -12,18 +12,18 @@
 @interface GoodsViewController : BaseViewController
 @property (nonatomic) CGSize currentKeyboardSize;
 @property (nonatomic)BOOL keyboardIsShown;
-@property (nonatomic, strong)NSString *speicalId;
+@property (nonatomic, strong) NSString *speicalId;
 
-@property (nonatomic,strong)NSDictionary *dic;
+@property (nonatomic, strong) NSDictionary *dic;
 
-@property (nonatomic,strong)UIImageView *coverImageView;
-@property (nonatomic,strong)UILabel *titleL;
-@property (nonatomic,strong)TYAttributedLabel *IntroductionL;
-@property (nonatomic,strong)UIView *bgView;
+@property (nonatomic, strong) UIImageView *coverImageView;
+@property (nonatomic, strong) UILabel *titleL;
+@property (nonatomic, strong) TYAttributedLabel *IntroductionL;
+@property (nonatomic, strong) UIView *bgView;
 
-@property (nonatomic,strong)UIWebView *detailedDescription;
-@property (nonatomic,assign)CGFloat webH;
-@property (nonatomic,strong)UIWebView *webView;
-@property (nonatomic,assign)int currentPage;
-@property (nonatomic,strong)NSMutableArray *commentsArray;
+@property (nonatomic, strong) UIWebView *detailedDescription;
+@property (nonatomic, assign) CGFloat webH;
+@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, assign) int currentPage;
+@property (nonatomic, strong) NSMutableArray *commentsArray;
 @end

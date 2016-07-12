@@ -12,15 +12,14 @@
 #import "NSDate+Time.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 @interface CommentCell ()<TYAttributedLabelDelegate>
-@property (nonatomic, strong)TYAttributedLabel *textLable;
-@property (nonatomic, strong)TYTextContainer *attString;
+@property (nonatomic, strong) TYAttributedLabel *textLable;
+@property (nonatomic, strong) TYTextContainer *attString;
 @end
 @implementation CommentCell
 +(CGFloat)getAddTextAttributedLabel:(CommentModel*)model{
     CGFloat cellH;
     cellH = 75.f*kScreenWidthP;
     TYAttributedLabel *textLable = [[TYAttributedLabel alloc]initWithFrame:CGRectMake(84*kScreenWidthP, 75*kScreenWidthP, kScreenWidth-104*kScreenWidthP, 0)];
-    
     textLable.linesSpacing = 22*kScreenWidthP;
     textLable.characterSpacing = 0.5*kScreenWidthP;
     NSString *text = model.commentContens;
@@ -43,7 +42,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         
-       self.commentImageView = [MyUtils createImageViewFrame:CGRectMake(20*kScreenWidthP, 20*kScreenWidthP, 47*kScreenWidthP, 47*kScreenWidthP) imageName:@"Avatar_default" cornerRadius:47/2*kScreenWidthP clipsToBounds:YES userInteractionEnabled:YES];
+        self.commentImageView = [MyUtils createImageViewFrame:CGRectMake(20*kScreenWidthP, 20*kScreenWidthP, 47*kScreenWidthP, 47*kScreenWidthP) imageName:@"Avatar_default" cornerRadius:47/2*kScreenWidthP clipsToBounds:YES userInteractionEnabled:YES];
         [self.contentView addSubview:self.commentImageView];
         
         self.nameLabel = [MyUtils createLabelFrame:CGRectMake(84*kScreenWidthP, 20*kScreenWidthP, 120*kScreenWidthP, 20*kScreenWidthP)  title:@"名称名称名称" font:15.0f textAlignment:NSTextAlignmentLeft textColor:RGBA(34,34,34,0.8) backgroundColor:[UIColor whiteColor] numberOfLines:0 layerCornerRadius:0.f];
@@ -70,7 +69,6 @@
     [_commentImageView sd_setImageWithURL:[NSURL URLWithString:model.userLogo] placeholderImage:[UIImage imageNamed:@"Avatar_default"]];
     NSString *timeStr = model.createTimeStr;
     _timeLabel.text = [NSDate timtimeStr:timeStr];
-    
     NSString *text = model.commentContens;
     // 属性文本生成器
     TYTextContainer *attString = [[TYTextContainer alloc]init];

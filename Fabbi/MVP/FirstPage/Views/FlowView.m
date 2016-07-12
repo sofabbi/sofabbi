@@ -7,31 +7,35 @@
 //
 
 #import "FlowView.h"
-
+#import <MBProgressHUD/MBProgressHUD.h>
 @interface FlowView ()
 {
     CALayer *_layer;
     CAAnimationGroup *_animaTionGroup;
     CADisplayLink *_disPlayLink;
 }
+@property (nonatomic, strong) NSNumber *contentId;
 @end
 @implementation FlowView
 
 - (instancetype)initWithFrame:(CGRect)frame from:(NSString *)from{
+    
     if (self=[super initWithFrame:frame]) {
+        
+        _from = from;
         self.backgroundColor = RGBA(0, 0, 0, 0);
         UIBlurEffect * blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
         UIVisualEffectView * effe = [[UIVisualEffectView alloc]initWithEffect:blur];
         effe.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
-//        [self addSubview:effe];
+        //        [self addSubview:effe];
         UIToolbar *toolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7")) {
             [[UIToolbar appearance] setBackgroundImage:[[UIImage alloc] init] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
             [[UIToolbar appearance] setBackgroundColor:[UIColor whiteColor]];
         }
         [self addSubview:toolbar];
-        _from = from;
-
+       
+        //评论
         self.myCommitBtn = [MyUtils createButtonFrame:CGRectMake(30*kScreenWidthP, 10*kScreenWidthP, 70*kScreenWidthP, 20*kScreenWidthP)  title:@"评论" titleColor:[UIColor blackColor] backgroundColor:nil target:self action:@selector(myCommitBtn:)];
         _myCommitBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         _myCommitBtn.center = CGPointMake(kScreenWidth/4, 25*kScreenWidthP);
@@ -41,39 +45,38 @@
         _myCommitBtn.backgroundColor = RGBA(0, 0, 0, 0);
         _myCommitBtn.titleLabel.backgroundColor = RGBA(0, 0, 0, 0);
         [self addSubview:self.myCommitBtn];
-       
+        //        线
+        UILabel *lineL = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 1*kScreenWidthP, 12*kScreenWidthP)];
+        lineL.center = CGPointMake(kScreenWidth/2, frame.size.height/2);
+        lineL.backgroundColor = RGBA(216, 216, 216, 1);
+        [self addSubview:lineL];
         
+        CGFloat startX = CGRectGetMaxX(self.myCommitBtn.frame)+5*kScreenWidthP;
+        _starBtn = [MyUtils createButtonFrame:CGRectMake(startX, 10*kScreenWidthP, 70*kScreenWidthP, 20*kScreenWidthP)  title:@"想要" titleColor:[UIColor blackColor] backgroundColor:nil target:self action:@selector(starBtn:)];
+        
+        _starBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        _starBtn.center = CGPointMake(kScreenWidth*3/4, 25*kScreenWidthP);
+        _starBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 9*kScreenWidthP);
+        _starBtn.backgroundColor = RGBA(0, 0, 0, 0);
+        _starBtn.titleLabel.backgroundColor = RGBA(0, 0, 0, 0);
+        [self addSubview:_starBtn];
         if ([from isEqualToString:@"DetailPageViewController"]) {
             
-            CGFloat startX = CGRectGetMaxX(self.myCommitBtn.frame)+5*kScreenWidthP;
-            _starBtn = [MyUtils createButtonFrame:CGRectMake(startX, 10*kScreenWidthP, 70*kScreenWidthP, 20*kScreenWidthP)  title:@"想要" titleColor:[UIColor blackColor] backgroundColor:nil target:self action:@selector(starBtn:)];
-            _starBtn.selected = YES;
-            _starBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-            _starBtn.center = CGPointMake(kScreenWidth*3/4, 25*kScreenWidthP);
+            [_starBtn setTitle:@"想要" forState:UIControlStateNormal];
             [_starBtn setImage:[UIImage imageNamed:@"fabbi_want"] forState:UIControlStateNormal];
             [_starBtn setImage:[UIImage imageNamed:@"fabbi_wanted"] forState:UIControlStateSelected];
-            _starBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 9*kScreenWidthP);
-            _starBtn.backgroundColor = RGBA(0, 0, 0, 0);
-            _starBtn.titleLabel.backgroundColor = RGBA(0, 0, 0, 0);
-            [self addSubview:_starBtn];
-
+            
         }else{
-            CGFloat startX = CGRectGetMaxX(self.myCommitBtn.frame)+5*kScreenWidthP;
-            _starBtn = [MyUtils createButtonFrame:CGRectMake(startX, 10*kScreenWidthP, 70*kScreenWidthP, 20*kScreenWidthP)  title:@"收藏" titleColor:[UIColor blackColor] backgroundColor:nil target:self action:@selector(starBtn:)];
-            _starBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-            _starBtn.center = CGPointMake(kScreenWidth*3/4, 25*kScreenWidthP);
+            [_starBtn setTitle:@"收藏" forState:UIControlStateNormal];
             [_starBtn setImage:[UIImage imageNamed:@"fabbi_collection"] forState:UIControlStateNormal];
             [_starBtn setImage:[UIImage imageNamed:@"fabbi_collectioned"] forState:UIControlStateSelected];
-            _starBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 9*kScreenWidthP);
-            [self addSubview:_starBtn];
-            _starBtn.backgroundColor = RGBA(0, 0, 0, 0);
-            _starBtn.titleLabel.backgroundColor = RGBA(0, 0, 0, 0);
         }
         
     }
     return self;
 }
-- (void)Dic:(NSDictionary *)dic{
+- (void)contentDictionary:(NSDictionary *)dic{
+    _contentId = [dic objectForKey:@"id"];
     NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
     if (uid) {
         if ([_from isEqualToString:@"DetailPageViewController"]){
@@ -83,7 +86,6 @@
                 
             }else{
                 _starBtn.selected = NO;
-
             }
         }else{
             NSNumber *userHascollection = [dic objectForKey:@"userHascollection"];
@@ -92,36 +94,41 @@
                 
             }else{
                 _starBtn.selected = NO;
-         
+                
             }
         }
     }
+    
+}
 
-}
-- (void)setDic:(NSDictionary *)dic{
-    _dic = dic;
-}
 #pragma flowViewDelegate
 - (void)myCommitBtn:(UIButton *)btn{
-    NSLog(@"commitBtn");NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
-    if (uid) {
-       [self.delegate comment];
+    NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
+    
+    if ([NSNumber isBlankNumber:_contentId]) {
+        [self.delegate noContent];
     }else{
-        [self.delegate tologin];
+        if (uid) {
+            [self.delegate comment];
+        }else{
+            [self.delegate tologin];
+        }
     }
     
 }
+
 - (void)starBtn:(UIButton *)btn{
-    btn.selected = _starBtn.selected;
-    NSLog(@"starBtn");
+    
     NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
-    if (uid) {
+    if ([NSNumber isBlankNumber:_contentId]) {
+        [self.delegate noContent];
+    }else if (uid) {
         BOOL NotLike = btn.selected;
         BOOL isLike = !btn.selected;
-
+        
         [UIView animateWithDuration:0.5f delay:0.f options:UIViewAnimationOptionAllowUserInteraction animations:^{
             btn.imageView.transform = CGAffineTransformMakeScale(1.5, 1.5);
-
+            
         } completion:^(BOOL finished)
          {
              if (finished) {
@@ -133,7 +140,7 @@
                  }];
              }
          }];
- 
+        
     }else{
         [self.delegate tologin];
     }
@@ -162,9 +169,5 @@
     [self.delegate toLink];
     
 }
-
-
-
-
 
 @end

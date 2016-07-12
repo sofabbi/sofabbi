@@ -34,7 +34,7 @@ static NSString * const CellReuseIdentifier = @"photoCell";
         layout.minimumLineSpacing = 0.f;
         layout.itemSize = CGSizeMake(CGRectGetWidth(myview.frame), CGRectGetWidth(myview.frame));
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-       
+        
         _collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(myview.frame), CGRectGetWidth(myview.frame)) collectionViewLayout:layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
@@ -59,11 +59,9 @@ static NSString * const CellReuseIdentifier = @"photoCell";
         _detailView = [[UITextView alloc]init];
         _detailView.backgroundColor = [UIColor clearColor];
         _detailView.frame = CGRectMake(0, 0, CGRectGetWidth(myview.frame), CGRectGetWidth(myview.frame));
-//        _detailView.text = @"cssv四川省长城生产厂";
         _detailView.hidden = YES;
-//        _detailView.showsVerticalScrollIndicator = NO;
-//        _detailView.showsHorizontalScrollIndicator = NO;
         [myview addSubview:_detailView];
+        
         UIBlurEffect * blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
         UIVisualEffectView * effe = [[UIVisualEffectView alloc]initWithEffect:blur];
         effe.frame = CGRectMake(0, 0, CGRectGetWidth(myview.frame), CGRectGetWidth(myview.frame));
@@ -80,7 +78,6 @@ static NSString * const CellReuseIdentifier = @"photoCell";
         //切换
         self.selectedView=[[UIView alloc]init];
         self.selectedView.frame=CGRectMake(CGRectGetWidth(myview.frame)-70*kScreenWidthP, 0, 70*kScreenWidthP,50*kScreenWidthP);
-        
         [myview addSubview:self.selectedView];
         _selectedView.userInteractionEnabled = YES;
         _selectBtn=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -120,11 +117,9 @@ static NSString * const CellReuseIdentifier = @"photoCell";
             _pageControl.hidden = YES;
         }else{
             _pageControl.hidden = NO;
-           _pageControl.numberOfPages=_imageArr.count;
+            _pageControl.numberOfPages=_imageArr.count;
         }
-        
-       [_collectionView reloadData];
-        
+        [_collectionView reloadData];
     }
     
 }
@@ -137,7 +132,6 @@ static NSString * const CellReuseIdentifier = @"photoCell";
     CoverViewCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellReuseIdentifier forIndexPath:indexPath];
     NSDictionary *dic = [_imageArr objectAtIndex:indexPath.item];
     cell.dic = dic;
-    
     return cell;
 }
 -(void)btn_click:(UIButton*)sender
@@ -151,8 +145,6 @@ static NSString * const CellReuseIdentifier = @"photoCell";
         _detailView.hidden = YES;
     }
     [self bringSubviewToFront:_selectedView];
-
-    
 }
 
 
@@ -194,10 +186,11 @@ static NSString * const CellReuseIdentifier = @"photoCell";
 - (void)exitBtn:(UIButton *)btn{
     [self removeFromSuperview];
 }
+#pragma 设置手势范围
 - (void)exitAction:(UITapGestureRecognizer *)tap{
     CGPoint pp=[tap locationInView:self];
     if (pp.y < 104*kScreenWidthP||pp.y > 524*kScreenWidthP) {
-      [self removeFromSuperview];  
+        [self removeFromSuperview];
     }
 }
 @end

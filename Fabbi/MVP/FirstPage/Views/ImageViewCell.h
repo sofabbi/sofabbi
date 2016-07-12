@@ -15,8 +15,8 @@
 - (void)selectImageView:(UIImageView *)imageView;
 @end
 @interface ImageViewCell : BaseCell<UIWebViewDelegate>
-@property (nonatomic,strong)UIWebView *webView;
-@property (nonatomic,weak)id<ImageViewCellDelegate>delegate;
+@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, weak) id<ImageViewCellDelegate>delegate;
 - (void)addTextAttributedLabel:(NSDictionary *)dic;
 +(CGFloat)getAddTextAttributedLabel:(NSDictionary *)dic;
 @end

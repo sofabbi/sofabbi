@@ -26,25 +26,22 @@
         CGFloat lb_likeW = 68.f*kScreenWidthP;
         UILabel *lb_like = [MyUtils createLabelFrame:CGRectMake(kScreenWidth - lb_likeW -20.f, 12.f*kScreenWidthP, lb_likeW, 17.f*kScreenWidthP) title:@"0人想要" font:12 textAlignment:NSTextAlignmentLeft textColor:RGBA(34, 34, 34, 0.5) backgroundColor:[UIColor clearColor] numberOfLines:1 layerCornerRadius:0];
         _bllike = lb_like;
-        
-        
         [self addSubview:lb_like];
+        
         CGFloat btlikeW = 30.f;
         CGFloat btlikeX = kScreenWidth - lb_likeW - 20.f - btlikeW;
         UIButton *bt_like = [[UIButton alloc] initWithFrame:CGRectMake(btlikeX, 6.f, 30.f, 30.f)];
         bt_like.userInteractionEnabled = NO;
         bt_like.imageEdgeInsets = UIEdgeInsetsMake(8.f, 11.f, 8.f, 4.f);
-        
         [bt_like setImage:[UIImage imageNamed:@"like"] forState:UIControlStateNormal];
         [bt_like setImage:[UIImage imageNamed:@"like_hight"] forState:UIControlStateHighlighted];
         [bt_like setImage:[UIImage imageNamed:@"like_hight"] forState:UIControlStateSelected];
         [bt_like addTarget:self action:@selector(tapLikeButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:bt_like];
-    
+        
         _btLike = bt_like;
         float marginLeft = 32.5f*kScreenWidthP;
         float gapWidth = 35.f*kScreenWidthP;
-        
         //大屏
         BOOL showMore = NO;
         if  ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)) {
@@ -55,7 +52,6 @@
                 }
             }
         }
-        
         
         imageView0 = [self buildImageViewAt:marginLeft];
         imageView1 = [self buildImageViewAt:marginLeft + gapWidth * 1.f];
@@ -80,16 +76,12 @@
     aImageView.layer.masksToBounds = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnAvatarView:)];
     [aImageView addGestureRecognizer:tap];
-    
     return aImageView;
 }
 #pragma mark - 设置头像
 
 - (void)setAvatarWithUser:(NSString *)pUser toImageView:(UIImageView *)pImageView{
-    
-    
     //    __weak UIImageView *weakView = pImageView;
-    
     NSString *urlString = [NSString stringWithFormat:@"%@",pUser];
     NSURL *url = [NSURL URLWithString:urlString];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
@@ -144,9 +136,6 @@
             [self setAvatarWithUser:user6 toImageView:imageView6];
             imageView0.hidden = imageView1.hidden = imageView2.hidden = imageView3.hidden = imageView4.hidden = imageView5.hidden = imageView6.hidden = NO;
         }
-        
-
-        
     }else{
         [_btLike setImage:[UIImage imageNamed:@"like"] forState:UIControlStateNormal];
     }
@@ -157,7 +146,6 @@
     sender.selected = isLike;
     [self heartAnimation:isLike];
     if (isLike) {
-       
         NSLog(@"点赞");
     }else{
         NSLog(@"取消赞");
@@ -200,11 +188,11 @@
         userIndex = 6;
     }
     if (userIndex >= 0) {
-//        WODUserModel *aUser = ((WDLikeItem *)likeUsers[userIndex]).likeUser;
+        //        WODUserModel *aUser = ((WDLikeItem *)likeUsers[userIndex]).likeUser;
         NSString * str = [NSString stringWithFormat:@"%ld",(long)userIndex];
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"提示" message:str delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        [alert show];
-//        [self.delegate showDetailViewOfUser:@"aUser.id_str"];
+//        [alert show];
+        //        [self.delegate showDetailViewOfUser:@"aUser.id_str"];
     }
 }
 

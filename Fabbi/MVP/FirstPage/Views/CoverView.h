@@ -15,19 +15,19 @@
 
 @end
 @interface CoverView : UIView<LinkViewDelegate>
-@property (nonatomic,strong) NSString *url;
-@property (nonatomic,strong) UIImageView *imageView;
-@property (nonatomic,strong) LinkView *linkView;
-@property (nonatomic,strong) UICollectionView *collectionView;
-@property (nonatomic, strong)   UIPageControl *pageControl;
+@property (nonatomic, strong) NSString *url;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) LinkView *linkView;
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UIPageControl *pageControl;
 
-@property (nonatomic,strong) NSArray *imageArr;
-@property (nonatomic,strong) NSDictionary *contenDic;
+@property (nonatomic, strong) NSArray *imageArr;
+@property (nonatomic, strong) NSDictionary *contenDic;
 
 @property (nonatomic, strong) UIView *selectedView;
 @property (nonatomic, strong) UIButton *selectBtn;
 @property (nonatomic, strong) UITextView *detailTextView;
 @property (nonatomic, strong) UIView *detailView;
-@property (nonatomic,weak) id<CoverViewDelegate>delegate;
+@property (nonatomic, weak) id<CoverViewDelegate>delegate;
 
 @end

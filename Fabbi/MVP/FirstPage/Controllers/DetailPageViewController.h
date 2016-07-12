@@ -21,4 +21,5 @@
 @property (nonatomic) CGSize currentKeyboardSize;
 @property (nonatomic)BOOL keyboardIsShown;
 @property (nonatomic,assign)NSInteger currentPage;
+@property (nonatomic, copy)void(^MoreBtnClickBlock)(UIButton *moreBtn,NSIndexPath * indexPath);
 @end

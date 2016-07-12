@@ -10,9 +10,9 @@
 #import <TYAttributedLabel.h>
 #import <DTCoreText/DTCoreText.h>
 @interface DetailPageCell ()<TYAttributedLabelDelegate>
-@property (nonatomic,weak) TYAttributedLabel *label;
-@property (nonatomic,strong) TYImageStorage *imageUrlStorage;
-@property (nonatomic,strong) DTAttributedLabel *lable;
+@property (nonatomic, weak) TYAttributedLabel *label;
+@property (nonatomic, strong) TYImageStorage *imageUrlStorage;
+@property (nonatomic, strong) DTAttributedLabel *lable;
 @end
 @implementation DetailPageCell
 
@@ -23,13 +23,13 @@
     lable.attributedString = [DetailPageCell _attributedStringForSnippetUsingiOS6Attributes:NO html:htmlcontent];
     [lable sizeToFit];
     [lable relayoutText];
-     height += lable.frame.size.height;
+    height += lable.frame.size.height;
     return height;
 }
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.detailPageImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 258*kScreenWidthP)];
-//        [self addSubview:self.detailPageImageView];
+        //        [self addSubview:self.detailPageImageView];
         
         _titleLable = [[UILabel alloc]initWithFrame:CGRectMake(20*kScreenWidthP, 20*kScreenWidthP, kScreenWidth - 40*kScreenWidthP, 28*kScreenWidthP)];
         _titleLable.font = [UIFont fontWithName:@"PingFangSC-Medium" size:20];
@@ -56,9 +56,8 @@
     NSString *htmlStr = [dic objectForKey:@"itemContens"];
     _lable.attributedString = [DetailPageCell _attributedStringForSnippetUsingiOS6Attributes:NO html:htmlStr];
     [_lable sizeToFit];
-    
     _lable.frame = CGRectMake(20*kScreenWidthP, CGRectGetMaxY(_titleLable.frame)+20*kScreenWidthP, kScreenWidth - 40*kScreenWidthP, _lable.frame.size.height);
-   
+    
 }
 
 

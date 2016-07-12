@@ -14,6 +14,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.firPageImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10*kScreenWidthP, 0, kScreenWidth-20*kScreenWidthP, 245*kScreenWidthP)];
+        [_firPageImageView setContentMode:UIViewContentModeRedraw];
         [self.contentView addSubview:self.firPageImageView];
         
         self.whiteView = [MyUtils createViewFrame:CGRectMake(10*kScreenWidthP,245*kScreenWidthP, kScreenWidth-20*kScreenWidthP, 60*kScreenWidthP) backgroundColor:RGBA(255, 255, 255, 1)];
@@ -24,10 +25,10 @@
         self.firPageLeftLabel.font = [UIFont systemFontOfSize:18*kScreenWidthP];
         [self.contentView addSubview:self.firPageLeftLabel];
         
-      self.firPageRightLabel = [MyUtils createLabelFrame:CGRectMake(297*kScreenWidthP,265*kScreenWidthP, 53*kScreenWidthP, 22*kScreenWidthP) title:nil font:13*kScreenWidthP textAlignment:NSTextAlignmentCenter textColor:[UIColor whiteColor] backgroundColor:RGBA(67, 181, 223, 1) numberOfLines:1 layerCornerRadius:3*kScreenWidthP];
-         self.firPageRightLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:13*kScreenWidthP];
+        self.firPageRightLabel = [MyUtils createLabelFrame:CGRectMake(297*kScreenWidthP,265*kScreenWidthP, 53*kScreenWidthP, 22*kScreenWidthP) title:nil font:13*kScreenWidthP textAlignment:NSTextAlignmentCenter textColor:[UIColor whiteColor] backgroundColor:RGBA(67, 181, 223, 1) numberOfLines:1 layerCornerRadius:3*kScreenWidthP];
+        self.firPageRightLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:13*kScreenWidthP];
         _firPageRightLabel.hidden = YES;
-         self.firPageRightLabel.layer.masksToBounds = YES;
+        self.firPageRightLabel.layer.masksToBounds = YES;
         [self.contentView addSubview:self.firPageRightLabel];
     }
     return  self;
@@ -42,8 +43,12 @@
             NSDictionary *dic = [itemFileList objectAtIndex:0];
             NSString *imageUrl = [dic objectForKey:@"fileUrl"];
             if (![NSString isBlankString:imageUrl]) {
-                NSURL *url = [NSURL URLWithString:[dic objectForKey:@"fileUrl"]];
+                //                int width = (int)(kScreenWidth-20*kScreenWidthP);
+                //                int height = (int)245*kScreenWidthP;
+                //                NSString * imageurl = [NSString stringWithFormat:@"%@?imageView2/1/w/%d/h/%d",imageUrl,width,height];
+                NSURL *url = [NSURL URLWithString:imageUrl];
                 [self.firPageImageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"placeholderImage"]];
+                [_firPageImageView setNeedsDisplay];
             }else{
                 _firPageImageView.image = [UIImage imageNamed:@"placeholderImage"];
             }

@@ -10,12 +10,10 @@
 #import "CommentModel.h"
 @interface CommentCell : BaseCell
  //左边的图片
-
-
-@property (nonatomic,strong) UIImageView *commentImageView;
-@property (nonatomic,strong) UILabel *nameLabel;
-@property (nonatomic,strong) UILabel *timeLabel;
-@property (nonatomic,strong) UILabel *descLabel;
+@property (nonatomic, strong) UIImageView *commentImageView;
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *timeLabel;
+@property (nonatomic, strong) UILabel *descLabel;
 +(CGFloat)getAddTextAttributedLabel:(CommentModel*)model;
 - (void)addTextAttributedLabel:(CommentModel *)model;
 @end

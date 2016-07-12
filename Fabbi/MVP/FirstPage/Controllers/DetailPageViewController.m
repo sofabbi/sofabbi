@@ -37,12 +37,12 @@
 #define EMOJI_PANNEL_HEIGHT 180.f
 static CGFloat const imageBGHeight = 258; // 背景图片的高度
 @interface DetailPageViewController ()<UITableViewDataSource,UITableViewDelegate,DetailPageDelegate,SingGoodDelegate,WDMessagePannelViewDelegate,flowViewDelegate,ImageViewCellDelegate>
-@property (nonatomic,strong) UITableView *detailPageTbView;
-@property (nonatomic,strong) NSMutableArray *detailPageArray;
-@property (nonatomic,strong) FlowView *flow;
+@property (nonatomic, strong) UITableView *detailPageTbView;
+@property (nonatomic, strong) NSMutableArray *detailPageArray;
+@property (nonatomic, strong) FlowView *flow;
 @property (nonatomic, strong) UIButton *mineBackBtn;
 @property (nonatomic, strong) UIButton *mineShareBtn;
-@property (nonatomic, strong)PETexttInputPanelView *messagePanelView;
+@property (nonatomic, strong) PETexttInputPanelView *messagePanelView;
 
 @property (nonatomic, assign) CGFloat lastContentOffSet;
 @property (nonatomic, assign) ScrollDirection scrollDirection;
@@ -51,18 +51,18 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
 @property (nonatomic, strong) UIView *shareView;
 @property (nonatomic, strong) NSMutableArray *commentArr;
 @property (nonatomic, strong) NSMutableArray *contentArr;
-@property (nonatomic,strong)UIWebView *webView;
+@property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) UIImageView *imageBG;
-
+@property (nonatomic, strong) UILabel *messageL;
 @end
 
 @implementation DetailPageViewController
 @synthesize keyboardIsShown;
 
 - (void)viewWillAppear:(BOOL)animated{
-   [MobClick beginLogPageView:@"商品"];
+    [MobClick beginLogPageView:@"商品"];
     
-   self.navigationController.navigationBar.hidden = YES;
+    self.navigationController.navigationBar.hidden = YES;
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [center addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -87,7 +87,19 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
     return _imageBG;
 }
 
-
+#pragma mark - 给图片设置尺寸
+- (UIImage *)originImage:(UIImage *)image scaleToSize:(CGSize)size{
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    
+    UIImage * scaleImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return scaleImage;
+}
 #pragma 获取数据
 - (void)requestDta{
     NSNumber *uid = UserDefaultObjectForKey(FABBI_AUTHORIZATION_UID);
@@ -98,24 +110,48 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
     }
     [UserStore POSTWithParams:dic URL:@"api/queryItemDetial.html" success:^(NSURLSessionDataTask *task, id responseObject) {
         _dic = (NSDictionary *)responseObject;
-        NSArray *itemFileList = [_dic objectForKey:@"itemFileList"];
-        if (itemFileList.count > 0) {
-            NSDictionary *itemFileListDic = [itemFileList objectAtIndex:0];
-            NSString *imageUrl = [itemFileListDic objectForKey:@"fileUrl"];
-            [_imageBG sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"placeholderImage"]];
+        NSNumber *itemId = [_dic objectForKey:@"id"];
+        if ([NSNumber isBlankNumber:itemId]) {
+            NSString *resultMessage = [_dic objectForKey:@"resultMessage"];
+            self.messageL.text = resultMessage;
+            _detailPageTbView.hidden = YES;
+            [self.view addSubview:self.messageL];
+        }else{
+            _detailPageTbView.hidden = NO;
+            [self.messageL removeFromSuperview];
+            
+            NSArray *itemFileList = [_dic objectForKey:@"itemFileList"];
+            if (itemFileList.count > 0) {
+                NSDictionary *itemFileListDic = [itemFileList objectAtIndex:0];
+                NSString *imageUrl = [itemFileListDic objectForKey:@"fileUrl"];
+                if ([NSString isBlankString:imageUrl]) {
+                    _imageBG.image = [UIImage imageNamed:@"placeholderImage"];
+                }else{
+                    [_imageBG sd_setImageWithURL:[NSURL URLWithString:imageUrl] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                        _imageBG.image = [self originImage:image scaleToSize:CGSizeMake(kScreenWidth, imageBGHeight)];
+                    }];
+
+                }
+            }
+            [_flow contentDictionary:_dic];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self requestComment];
+                [self createTableView];
+                [_detailPageTbView reloadData];
+            });
         }
-        [_flow Dic:_dic];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self requestComment];
-            [self createTableView];
-            [_detailPageTbView reloadData];
-        });
-        
-        
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         
     }];
     
+}
+- (UILabel *)messageL{
+    if (_messageL == nil) {
+        _messageL = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 40*kScreenWidthP)];
+        _messageL.center = CGPointMake(kScreenWidth/2, kScreenHeight/2 - 50*kScreenWidthP);
+        _messageL.textAlignment = NSTextAlignmentCenter;
+    }
+    return _messageL;
 }
 #pragma 评论
 - (void)requestComment{
@@ -137,9 +173,9 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
                 [_commentArr addObject:commentModel];
             }];
         }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_detailPageTbView reloadData];
-            });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_detailPageTbView reloadData];
+        });
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         
     }];
@@ -161,7 +197,7 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
                 [_commentArr addObject:commentModel];
             }];
         }else{
-          _detailPageTbView.mj_footer.hidden = YES;
+            _detailPageTbView.mj_footer.hidden = YES;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [_detailPageTbView reloadData];
@@ -177,22 +213,23 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.detailPageTbView = [[UITableView alloc]initWithFrame:
                              CGRectMake(0, 0, kScreenWidth, kScreenHeight-50*kScreenWidthP)
-                             style:UITableViewStylePlain];
+                                                        style:UITableViewStylePlain];
     self.detailPageTbView.delegate = self;
     self.detailPageTbView.dataSource = self;
-    _detailPageTbView.scrollsToTop = NO;
+    _detailPageTbView.showsVerticalScrollIndicator = NO;
+    _detailPageTbView.showsHorizontalScrollIndicator = NO;
+    //    _detailPageTbView.scrollsToTop = NO;
     _detailPageTbView.contentInset = UIEdgeInsetsMake(imageBGHeight, 0, 0, 0);
     [self.view addSubview:self.detailPageTbView];
-    
     [self.detailPageTbView addSubview:self.imageBG];
     [self creatBackAndShare];
     self.detailPageTbView.tableFooterView = [[UIView alloc]init];
     
     self.flow = [[FlowView alloc]initWithFrame:CGRectMake(0, KViewHeight-50*kScreenWidthP, kScreenWidth, 50*kScreenWidthP) from:@"DetailPageViewController"];
-
+    [self.flow contentDictionary:_dic];
     _flow.delegate = self;
-    [_flow Dic:_dic];
     [self.view addSubview:self.flow];
+    
     _messagePanelView = [[PETexttInputPanelView alloc] initWithFrame:CGRectMake(0.f, CGRectGetHeight(self.view.frame), kScreenWidth, kInitialBarHeight)];
     _messagePanelView.clipsToBounds = YES;
     _messagePanelView.delegate = self;
@@ -213,19 +250,22 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
     _backView.userInteractionEnabled = YES;
     _backView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_backView];
+    
     UITapGestureRecognizer *tabBack = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backFirstPageVctrl)];
     [_backView addGestureRecognizer:tabBack];
+    
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(16*kScreenWidthP, 23*kScreenWidthP, 32*kScreenWidthP, 32*kScreenWidthP)];
     imageView.image = [UIImage imageNamed:@"fabbi_back"];
     [_backView addSubview:imageView];
-   
     
     _shareView = [[UIView alloc]initWithFrame:CGRectMake(kScreenWidth-50*kScreenWidthP, 0, 50*kScreenWidthP, 50*kScreenWidthP)];
     _shareView.userInteractionEnabled = YES;
     _shareView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_shareView];
+    
     UITapGestureRecognizer *share = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shareAction)];
     [_shareView addGestureRecognizer:share];
+    
     _mineShareBtn = [MyUtils createButtonFrame:CGRectMake(2*kScreenWidthP, 23*kScreenWidthP, 32*kScreenWidthP, 32*kScreenWidthP) title:nil titleColor:nil backgroundColor:[UIColor clearColor] target:self action:@selector(shareAction)];
     [_mineShareBtn setImage:[[UIImage imageNamed:@"fabbi_share"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
     _mineShareBtn.userInteractionEnabled = NO;
@@ -296,15 +336,16 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     switch (indexPath.section) {
-            case 0:
+        case 0:
         {
+            
             
             CGFloat height = [DetailPageCell getAddTextAttributedLabel:_dic];
             return height;
-
+            
         }
             break;
-            case 1:
+        case 1:
             return 40*kScreenWidthP;
             break;
         case 2:
@@ -317,7 +358,7 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
         }
             
             break;
-          case 4:
+        case 4:
         {
             CommentModel *model = [_commentArr objectAtIndex:indexPath.row];
             return  [CommentCell getAddTextAttributedLabel:model];
@@ -382,7 +423,7 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
 }
 #pragma mark-DetailPageDelegate
 - (void)back{
-   
+    
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -403,12 +444,12 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [_messagePanelView.commentTextView resignFirstResponder];
     //    section随tableview滚动
-    CGFloat heightForHeader = 50.0;//section header的高度
-    if (scrollView.contentOffset.y<=heightForHeader&&scrollView.contentOffset.y>=0) {
-        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
-    } else if (scrollView.contentOffset.y>=heightForHeader) {
-        scrollView.contentInset = UIEdgeInsetsMake(-heightForHeader, 0, 0, 0);
-    }
+    //    CGFloat heightForHeader = 50.0;//section header的高度
+    //    if (scrollView.contentOffset.y<=heightForHeader&&scrollView.contentOffset.y>=0) {
+    //        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
+    //    } else if (scrollView.contentOffset.y>=heightForHeader) {
+    //        scrollView.contentInset = UIEdgeInsetsMake(-heightForHeader, 0, 0, 0);
+    //    }
     
     //    下拉时顶部图片变大,橡皮筋效果
     CGFloat offsetY = scrollView.contentOffset.y;
@@ -417,6 +458,8 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
         CGRect frame = self.imageBG.frame;
         frame.size.height = imageBGHeight - offsetH;
         frame.origin.y = -imageBGHeight + offsetH;
+//        frame.origin.x = offsetY/2;
+//        frame.size.width = kScreenWidth - offsetY;
         self.imageBG.frame = frame;
     }
     
@@ -441,9 +484,7 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
                 _detailPageTbView.frame= CGRectMake(0, 0, kScreenWidth, kScreenHeight);
                 self.flow.hidden = YES;
             }
-            
         }
-        
     }else{
         _scrollDirection = ScrollDirectionNone;
     }
@@ -480,11 +521,17 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
 
 #pragma 分享
 - (void)shareAction{
+    NSNumber *contentId = [_dic objectForKey:@"id"];
+    if ([NSNumber isBlankNumber:contentId]) {
+        NSString *resultMessage = [_dic objectForKey:@"resultMessage"];
+        [self HUBshow:resultMessage];
+    }else{
+        [MobClick event:@"detailShare"];
+        BOOL canBeShared = YES;
+        ShareView *shareView = [[ShareView alloc] initWithCanBeShared:canBeShared buttonTitles:@[@"取消"] stylizeButtonIndex:(canBeShared ? 0 : -1) andDelegate:self];
+        [shareView showInView:self.navigationController.view];
+    }
     
-    [MobClick event:@"detailShare"];
-    BOOL canBeShared = YES;
-    ShareView *shareView = [[ShareView alloc] initWithCanBeShared:canBeShared buttonTitles:@[@"取消"] stylizeButtonIndex:(canBeShared ? 0 : -1) andDelegate:self];
-    [shareView showInView:self.navigationController.view];
 }
 
 - (void)didSelectedItem:(UIButton *)sender{
@@ -523,7 +570,6 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
     req.bText = YES;
     req.text = @"fabbi";
     req.scene = (int)pScene;
-    
     [WXApi sendReq:req];
 }
 
@@ -538,7 +584,6 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
                          @"ShareMessageFrom":@"DetailPageViewController"
                          };
     [WeiboSDK sendRequest:request];
-    
 }
 
 //消息中图片内容和多媒体内容不能共存
@@ -599,6 +644,20 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
         failure(error);
     }];
 }
+- (void)noContent{
+    NSString *resultMessage = [_dic objectForKey:@"resultMessage"];
+    [self HUBshow:resultMessage];
+}
+- (void)HUBshow:(NSString *)lableText{
+    MBProgressHUD *hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hub.mode = MBProgressHUDModeText;
+    hub.labelText = lableText;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        // Do something...
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    });
+}
 - (void)tologin{
     LoginViewController *loginVctrl = [[LoginViewController alloc]init];
     self.definesPresentationContext = YES; //self is presenting view controller
@@ -643,7 +702,7 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         
     }];
-
+    
 }
 #pragma mark - Keyboard Helpers
 #pragma 面板消失
@@ -693,7 +752,7 @@ static CGFloat const imageBGHeight = 258; // 背景图片的高度
     [UIView animateWithDuration:animationDuration delay:0.0f options:options
                      animations:^{
                          [_messagePanelView setFrame:viewFrame];
-    
+                         
                      }completion:nil
      ];
     keyboardIsShown = YES;

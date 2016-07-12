@@ -13,12 +13,12 @@
 
 @interface DetailPageCell : BaseCell
 // 最上面的图片
-@property (nonatomic,strong) UIImageView *detailPageImageView;
+@property (nonatomic, strong) UIImageView *detailPageImageView;
 // 图片，从上个页面传过来的
-@property (nonatomic,strong)NSString *url;
+@property (nonatomic, strong) NSString *url;
 // UIImageView上的label
-@property (nonatomic,strong)UILabel *titleLable;
-@property (nonatomic,strong)UILabel *descrLabel;
+@property (nonatomic, strong) UILabel *titleLable;
+@property (nonatomic, strong) UILabel *descrLabel;
 
 - (void)configDetailPageModel:(DetailPageModel *)detailPageModel;
 // 代理

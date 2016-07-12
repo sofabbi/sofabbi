@@ -12,8 +12,8 @@
 - (void)addFloatingView:(NSDictionary *)dic;
 @end
 @interface RelatedProductsCell : BaseCell<UIWebViewDelegate>
-@property (nonatomic,strong)NSDictionary *contentDictionary;
-@property (nonatomic,strong)NSIndexPath *indexPath;
-@property (nonatomic,weak) id<RelatedProductsCellDelegate>delegate;
+@property (nonatomic, strong) NSDictionary *contentDictionary;
+@property (nonatomic, strong) NSIndexPath *indexPath;
+@property (nonatomic, weak) id<RelatedProductsCellDelegate>delegate;
 +(CGFloat)getCellHeight:(NSDictionary *)model;
 @end
